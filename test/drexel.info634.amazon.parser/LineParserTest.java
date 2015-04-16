@@ -33,7 +33,7 @@ public class LineParserTest {
 
   @Test
   public void testParseID() throws Exception {
-    assertEquals(1, LineParser.parseID(sampleData[0]));
+    assertEquals("1", LineParser.parseID(sampleData[0]));
   }
 
   @Test

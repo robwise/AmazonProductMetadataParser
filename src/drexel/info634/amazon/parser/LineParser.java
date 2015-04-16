@@ -46,8 +46,8 @@ public class LineParser {
     return id.matcher(line).matches();
   }
 
-  static int parseID(String line) {
-    return Integer.parseInt(parseLine(line, id).group(1));
+  static String parseID(String line) {
+    return parseLine(line, id).group(1);
   }
 
   static boolean isASIN(String line) {
