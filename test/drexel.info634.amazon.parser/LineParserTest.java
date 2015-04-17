@@ -2,7 +2,9 @@ package drexel.info634.amazon.parser;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Rob on 4/15/2015.
@@ -114,19 +116,19 @@ public class LineParserTest {
   public void testParseCategoriesItems() throws Exception {
     String[] expectedItems = {"Books[283155]", "Subjects[1000]", "Religion & Spirituality[22]",
                               "Christianity[12290]", "Clergy[12360]", "Preaching[12368]"};
-    String[] actualItems = LineParser.parseCategoriesItems(sampleData[7]);
+    String[] actualItems = LineParser.parseCategoryItems(sampleData[7]);
     assertArrayEquals(expectedItems, actualItems);
   }
 
   @Test
   public void testParseCategoriesItemName() throws Exception {
-    String actualName = LineParser.parseCategoriesItemName("Books[283155]");
+    String actualName = LineParser.parseCategoryItemName("Books[283155]");
     assertEquals("Books", actualName);
   }
 
   @Test
   public void testParseCategoriesItemID() throws Exception {
-    String actualID = LineParser.parseCategoriesItemID("Books[283155]");
+    String actualID = LineParser.parseCategoryItemID("Books[283155]");
     assertEquals("283155", actualID);
   }
 
@@ -156,31 +158,31 @@ public class LineParserTest {
 
   @Test
   public void testParseReviewsItemDate() throws Exception {
-    String actualDate = LineParser.parseReviewsItemDate(sampleData[10]);
+    String actualDate = LineParser.parseReviewDate(sampleData[10]);
     assertEquals("2000-7-28", actualDate);
   }
 
   @Test
   public void testParseReviewsItemCustomer() throws Exception {
-    String actualCustomer = LineParser.parseReviewsItemCustomer(sampleData[10]);
+    String actualCustomer = LineParser.parseReviewCustomer(sampleData[10]);
     assertEquals("A2JW67OY8U6HHK", actualCustomer);
   }
 
   @Test
   public void testParseReviewsItemRating() throws Exception {
-    String actualRating = LineParser.parseReviewsItemRating(sampleData[10]);
+    String actualRating = LineParser.parseReviewRating(sampleData[10]);
     assertEquals("5", actualRating);
   }
 
   @Test
   public void testParseReviewsItemVotes() throws Exception {
-    String actualVotes = LineParser.parseReviewsItemVotes(sampleData[10]);
+    String actualVotes = LineParser.parseReviewVotes(sampleData[10]);
     assertEquals("10", actualVotes);
   }
 
   @Test
   public void testParseReviewsItemHelpful() throws Exception {
-    String actualHelpful = LineParser.parseReviewsItemHelpful(sampleData[10]);
+    String actualHelpful = LineParser.parseReviewHelpful(sampleData[10]);
     assertEquals("9", actualHelpful);
   }
 

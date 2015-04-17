@@ -22,24 +22,27 @@ public class LineParser {
   static Pattern categoriesItemID         = Pattern.compile(".*\\[(.*)\\]");
   static Pattern reviews                  = Pattern.compile("\\s{2}reviews:\\s.*");
   static Pattern reviewsTotal             = Pattern.compile("\\s{2}reviews:\\stotal:\\s(\\S+).*");
-  static Pattern
-                 reviewsDownloaded
-                                          = Pattern.compile("\\s{2}reviews:\\stotal:\\s\\S+\\s{2}downloaded:\\s(\\S+)"
-                                                            + ".*");
-  static Pattern
-                 reviewsDownloadAvgRating
-                                          = Pattern.compile("\\s{2}reviews:\\stotal:\\s\\S+\\s{2}downloaded:\\s\\S+"
-                                                            + "\\s{2}avg\\srating:\\s(\\S+)");
+  static Pattern reviewsDownloaded = Pattern.compile("\\s{2}reviews:\\stotal:\\s\\S+"
+                                                     + "\\s{2}downloaded:\\s(\\S+).*");
+  static Pattern reviewsDownloadAvgRating = Pattern.compile("\\s{2}reviews:\\stotal:\\s\\S+"
+                                                            + "\\s{2}downloaded:\\s\\S+"
+                                                            + "\\s{2}avg"
+                                                            + "\\srating:\\s(\\S+)");
   static Pattern reviewsItemDate          = Pattern.compile("\\s{4}(\\d{4}-\\d{1,2}-\\d{1,2}).*");
-  static Pattern reviewsItemCustomer      = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}\\s{2}cutomer:\\s(\\S+).*");
-  static Pattern reviewsItemRating        = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,"
-                                                            + "2}\\s{2}cutomer:\\s\\S+\\s{2}rating:\\s(\\S+).*");
-  static Pattern reviewsItemVotes         = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,"
-                                                            + "2}\\s{2}cutomer:\\s\\S+\\s{2}rating:\\s\\S+\\s{2}"
-                                                            + "votes:\\s{2,3}(\\S+).*");
-  static Pattern reviewsItemHelpful       = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,"
-                                                            + "2}\\s{2}cutomer:\\s\\S+\\s{2}rating:\\s\\S+\\s{2}"
-                                                            + "votes:\\s{2,3}\\S+\\s{2}helpful:\\s{2,3}(\\S+)");
+  static Pattern reviewsItemCustomer = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
+                                                       + "\\s{2}cutomer:\\s{1,4}(\\S+).*");
+  static Pattern reviewsItemRating = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
+                                                     + "\\s{2}cutomer:\\s{1,4}\\S+"
+                                                     + "\\s{2}rating:\\s(\\S+).*");
+  static Pattern reviewsItemVotes = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
+                                                    + "\\s{2}cutomer:\\s{1,4}\\S+"
+                                                    + "\\s{2}rating:\\s\\S+"
+                                                    + "\\s{2}votes:\\s{1,3}(\\S+).*");
+  static Pattern reviewsItemHelpful = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
+                                                      + "\\s{2}cutomer:\\s{1,4}\\S+"
+                                                      + "\\s{2}rating:\\s\\S+"
+                                                      + "\\s{2}votes:\\s{1,3}\\S+"
+                                                      + "\\s{2}helpful:\\s{1,3}(\\S+)");
   static Pattern discontinuedProduct      = Pattern.compile("\\s{2}discontinued\\sproduct");
 
   static boolean isID(String line) {
@@ -104,7 +107,7 @@ public class LineParser {
     return parseLine(line, categories).group(1);
   }
 
-  static String[] parseCategoriesItems(String line) {
+  static String[] parseCategoryItems(String line) {
     Matcher matcher = categoriesItemsDelimiter.matcher(line);
     //noinspection ResultOfMethodCallIgnored
     matcher.find();
@@ -113,11 +116,11 @@ public class LineParser {
     return categoriesItemsDelimiter.split(trimmedLine);
   }
 
-  static String parseCategoriesItemName(String categoriesItem) {
+  static String parseCategoryItemName(String categoriesItem) {
     return parseLine(categoriesItem, categoriesItemName).group(1);
   }
 
-  static String parseCategoriesItemID(String line) {
+  static String parseCategoryItemID(String line) {
     return parseLine(line, categoriesItemID).group(1);
   }
 
@@ -137,23 +140,23 @@ public class LineParser {
     return parseLine(line, reviewsDownloadAvgRating).group(1);
   }
 
-  static String parseReviewsItemDate(String line) {
+  static String parseReviewDate(String line) {
     return parseLine(line, reviewsItemDate).group(1);
   }
 
-  static String parseReviewsItemCustomer(String line) {
+  static String parseReviewCustomer(String line) {
     return parseLine(line, reviewsItemCustomer).group(1);
   }
 
-  static String parseReviewsItemRating(String line) {
+  static String parseReviewRating(String line) {
     return parseLine(line, reviewsItemRating).group(1);
   }
 
-  static String parseReviewsItemVotes(String line) {
+  static String parseReviewVotes(String line) {
     return parseLine(line, reviewsItemVotes).group(1);
   }
 
-  static String parseReviewsItemHelpful(String line) {
+  static String parseReviewHelpful(String line) {
     return parseLine(line, reviewsItemHelpful).group(1);
   }
 
