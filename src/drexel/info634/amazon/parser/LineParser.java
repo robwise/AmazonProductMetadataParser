@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class LineParser {
   static Pattern id                       = Pattern.compile("Id:\\s{3}(.*)");
   static Pattern asin                     = Pattern.compile("ASIN:\\s(.*)");
-  static Pattern title                    = Pattern.compile("\\s{2}title:\\s(.*)");
+  static Pattern title = Pattern.compile("\\s{2,3}title:\\s(.*)");
   static Pattern group                    = Pattern.compile("\\s{2}group:\\s(.*)");
   static Pattern salesrank                = Pattern.compile("\\s{2}salesrank:\\s(.*)");
   static Pattern similar                  = Pattern.compile("\\s{2}similar:\\s(.*)");
@@ -30,16 +30,16 @@ public class LineParser {
                                                             + "\\srating:\\s(\\S+)");
   static Pattern reviewsItemDate          = Pattern.compile("\\s{4}(\\d{4}-\\d{1,2}-\\d{1,2}).*");
   static Pattern reviewsItemCustomer = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
-                                                       + "\\s{2}cutomer:\\s{1,4}(\\S+).*");
+                                                       + "\\s{2}cutomer:\\s+(\\S+).*");
   static Pattern reviewsItemRating = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
-                                                     + "\\s{2}cutomer:\\s{1,4}\\S+"
+                                                     + "\\s{2}cutomer:\\s+\\S+"
                                                      + "\\s{2}rating:\\s(\\S+).*");
   static Pattern reviewsItemVotes = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
-                                                    + "\\s{2}cutomer:\\s{1,4}\\S+"
+                                                    + "\\s{2}cutomer:\\s+\\S+"
                                                     + "\\s{2}rating:\\s\\S+"
                                                     + "\\s{2}votes:\\s{1,3}(\\S+).*");
   static Pattern reviewsItemHelpful = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
-                                                      + "\\s{2}cutomer:\\s{1,4}\\S+"
+                                                      + "\\s{2}cutomer:\\s+\\S+"
                                                       + "\\s{2}rating:\\s\\S+"
                                                       + "\\s{2}votes:\\s{1,3}\\S+"
                                                       + "\\s{2}helpful:\\s{1,3}(\\S+)");
@@ -62,7 +62,7 @@ public class LineParser {
   }
 
   static boolean isTitle(String line) {
-    return title.matcher(line).matches();
+    return title.matcher(line).find();
   }
 
   static String parseTitle(String line) {

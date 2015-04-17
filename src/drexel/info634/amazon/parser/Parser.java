@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,8 @@ public class Parser {
 
       while ((line = reader.readLine()) != null && ((lineLimit < 0) || (++lineNumber
                                                                         <= lineLimit))) {
-
+        // Normalize non-regex-parse-able characters
+        line = Normalizer.normalize(line, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
         if (isEndOfProduct(line)) {
           outputProduct(output, fProduct, productLines);
           productLines = new ArrayList<>();
@@ -71,8 +73,6 @@ public class Parser {
         }
         lineNumber++;
       }
-      outputProduct(output, fProduct, productLines);
-
     } catch (InvalidAttributesException e) {
       e.printStackTrace();
     } finally {
