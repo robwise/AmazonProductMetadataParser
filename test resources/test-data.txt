@@ -1,3 +1,10 @@
+# Full information about Amazon Share the Love products
+Total items: 548552
+
+Id:   0
+ASIN: 0771044445
+  discontinued product
+
 Id:   1
 ASIN: 0827229534
   title: Patterns of Preaching: A Sermon Sampler

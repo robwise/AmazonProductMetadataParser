@@ -51,4 +51,13 @@ public class ReviewsDTO {
   public void setAvgRating(String avgRating) {
     this.avgRating = avgRating;
   }
+
+  @Override
+  public String toString() {
+    String result = "Reviews:" + System.lineSeparator();
+    for (ReviewDTO review : reviews) {
+      result += System.lineSeparator() + review.toString();
+    }
+    return result;
+  }
 }

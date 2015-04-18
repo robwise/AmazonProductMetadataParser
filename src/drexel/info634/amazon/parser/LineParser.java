@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * Handles identification and parsing of values from a given line of data. Created by Rob on 4/15/2015.
  */
-public class LineParser {
+class LineParser {
   static Pattern id                       = Pattern.compile("Id:\\s{3}(.*)");
   static Pattern asin                     = Pattern.compile("ASIN:\\s(.*)");
   static Pattern title = Pattern.compile("\\s{2,3}title:\\s(.*)");

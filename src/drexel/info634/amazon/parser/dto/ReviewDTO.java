@@ -51,4 +51,14 @@ public class ReviewDTO {
   public void setDate(String date) {
     this.date = date;
   }
+
+  @Override
+  public String toString() {
+    String result = "  Review Date: " + date + System.lineSeparator();
+    result += "  Review Customer: " + customer + System.lineSeparator();
+    result += "  Review Rating: " + rating + System.lineSeparator();
+    result += "  Review Votes: " + votes + System.lineSeparator();
+    result += "  Review Helpful: " + helpful + System.lineSeparator();
+    return result;
+  }
 }

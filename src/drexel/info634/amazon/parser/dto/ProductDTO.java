@@ -15,8 +15,12 @@ public class ProductDTO {
   public String salesrank;
   public String similarCount;
   public String[] similarItems;
-  public String categoriesCount;
   public CategoriesDTO categories;
   public ReviewsDTO reviews;
   public String discontinued;
+
+  public String toString() {
+    // TODO
+    return null;
+  }
 }

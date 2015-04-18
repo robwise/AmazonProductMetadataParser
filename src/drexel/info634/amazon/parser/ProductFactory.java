@@ -16,7 +16,7 @@ import drexel.info634.amazon.parser.dto.ReviewsDTO;
 /**
  * Creates a {@code ProductDTO} out of raw text data. Created by Rob on 4/16/2015.
  */
-public class ProductFactory {
+class ProductFactory {
 
   private List<String> dataLines;
   private ProductDTO productDTO;
@@ -148,15 +148,16 @@ public class ProductFactory {
           "Categories not found on line " + currentLineIndex + ": " + line);
     }
 
+    // Initialize collection we will eventually set ProductDTO.categories as
+    CategoriesDTO categories = new CategoriesDTO();
+
     // Set categories count
     int categoriesCount = Integer.parseInt(LineParser.parseCategoriesCount(line));
-    productDTO.categoriesCount = String.valueOf(categoriesCount);
+    categories.setCount(String.valueOf(categoriesCount));
 
     // Use categories count to determine how many lines we need to parse
     int lastCategoryLineIndex = currentLineIndex + categoriesCount;
 
-    // Initialize collection we will eventually set ProductDTO.categories as
-    CategoriesDTO categories = new CategoriesDTO();
 
     // Parse each line into a CategoryDTO and add to categories
     while (currentLineIndex < lastCategoryLineIndex) {

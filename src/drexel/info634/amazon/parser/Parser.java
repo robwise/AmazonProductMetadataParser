@@ -22,80 +22,110 @@ import drexel.info634.amazon.parser.output.Output;
  * href="https://snap.stanford.edu/data/amazon-meta.html">Data Source</a><br> <br> Created by Rob
  * Wise on 4/15/2015. <br>
  */
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class Parser {
 
   private final static Charset ENCODING = StandardCharsets.UTF_8;
   private final static int DATA_START_LINE = 3;
 
   public static void main(String... args) throws IOException {
-//    Parser parser = new Parser("resources/amazon-meta.txt");
-//    String lines = parser.getFirstLines(300);
-//    System.out.println(lines);
-
-    Parser parser = new Parser("resources/amazon-meta.txt");
-    parser.parse(new ConsoleOutput());
+    Parser parser = new Parser("resources/amazon-meta.txt", new ConsoleOutput());
+    parser.parse();
   }
 
   private final Path amazonData;
+  private final Output output;
+  private final ProductFactory fProduct;
 
-  public Parser(String pathString) {
+  private int lineLimit;
+  private int lineNumber;
+  private int productCount;
+  private String line;
+  private BufferedReader reader;
+
+  public Parser(String pathString, Output output) {
     this.amazonData = Paths.get(pathString);
+    this.output = output;
+    fProduct = new ProductFactory();
   }
 
-  public void parse(Output output, int lineLimit) throws IOException {
+  public void parse(int lineLimit) throws IOException {
     try (BufferedReader reader = Files.newBufferedReader(amazonData, ENCODING)) {
-      String line;
-      int lineNumber = 0;
+
+      initializeFields(lineLimit, reader);
+
+      System.out.println("Beginning Parse...");
+      System.out.println();
 
       // Connect to Output
       output.open();
 
-      // Skip past beginning lines
-      while (lineNumber < DATA_START_LINE) {
-        reader.readLine();
-        lineNumber++;
-      }
+      moveReaderToDataStart(reader);
 
       // Parse data into ProductDTOs
-      ProductFactory fProduct = new ProductFactory();
       List<String> productLines = new ArrayList<>();
 
-      while ((line = reader.readLine()) != null && ((lineLimit < 0) || (++lineNumber
-                                                                        <= lineLimit))) {
+      while (lineLimit < 0 || ++lineNumber <= lineLimit) {
+        line = reader.readLine();
+
+        // Check for end of data
+        if (readerAtEndOfData()) {
+          outputProduct(productLines);
+          break;
+        }
+
         // Normalize non-regex-parse-able characters
         line = Normalizer.normalize(line, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-        if (isEndOfProduct(line)) {
-          outputProduct(output, fProduct, productLines);
+        if (readerAtEndOfProduct()) {
+          outputProduct(productLines);
           productLines = new ArrayList<>();
         } else {
-          // Add current line
           productLines.add(line);
         }
-        lineNumber++;
       }
     } catch (InvalidAttributesException e) {
+      System.out.println("Bad data on line: " + lineNumber);
+      System.out.println("Line reads: " + line);
       e.printStackTrace();
     } finally {
       output.close();
     }
+    System.out.println("Parse complete: " + productCount + " Products Created...");
   }
 
-  private List<String> outputProduct(Output output, ProductFactory fProduct,
-                                     List<String> productLines)
+  private boolean readerAtEndOfData() {
+    return null == line || lineNumber == lineLimit;
+  }
+
+  private void moveReaderToDataStart(BufferedReader reader) throws IOException {
+    // Skip past beginning lines
+    while (lineNumber < DATA_START_LINE) {
+      reader.readLine();
+      lineNumber++;
+    }
+  }
+
+  private void initializeFields(int lineLimit, BufferedReader reader) {
+    this.lineLimit = lineLimit;
+    this.reader = reader;
+    lineNumber = 0;
+    productCount = 0;
+    line = null;
+  }
+
+  private void outputProduct(List<String> productLines)
       throws InvalidAttributesException, IOException {
     String[] productLinesArray = productLines.toArray(new String[productLines.size()]);
-    System.out.println("Built Object: ");
-    for (String line : productLinesArray) {
-      System.out.println(line);
-    }
     ProductDTO product = fProduct.build(productLinesArray);
     output.createProduct(product);
-    productLines = new ArrayList<>();
-    return productLines;
+    productCount++;
+    if (productCount % 1000 == 0) {
+      System.out.println("***Status: " + productCount + " Products Created...");
+    }
   }
 
-  public void parse(Output output) throws IOException {
-    parse(output, -1);
+  public void parse() throws IOException {
+    parse(-1);
   }
 
   public String getFirstLines(int numLines) throws IOException {
@@ -111,7 +141,7 @@ public class Parser {
     return lines;
   }
 
-  private boolean isEndOfProduct(String line) {
+  private boolean readerAtEndOfProduct() {
     return line.isEmpty();
   }
 

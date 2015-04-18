@@ -20,4 +20,9 @@ public class CategoryItemDTO {
   public String getId() {
     return id;
   }
+
+  @Override
+  public String toString() {
+    return String.format("  Category Name: %s, Category ID: %s%n", name, id);
+  }
 }

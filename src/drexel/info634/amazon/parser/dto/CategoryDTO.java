@@ -26,4 +26,12 @@ public class CategoryDTO {
     return categoryItems.get(index);
   }
 
+  @Override
+  public String toString() {
+    String result = "";
+    for (CategoryItemDTO categoryItem : categoryItems) {
+      result += categoryItem.toString();
+    }
+    return result;
+  }
 }

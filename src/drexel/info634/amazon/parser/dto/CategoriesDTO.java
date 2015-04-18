@@ -8,12 +8,11 @@ import java.util.List;
  */
 public class CategoriesDTO {
 
-  private int count = 0;
+  private String count = "0";
   private final List<CategoryDTO> categories = new ArrayList<>();
 
   public void add(CategoryDTO category) {
     categories.add(category);
-    count++;
   }
 
   public CategoryDTO[] getAll() {
@@ -24,7 +23,20 @@ public class CategoriesDTO {
     return categories.get(index);
   }
 
-  public int getCount() {
+  public String getCount() {
     return count;
+  }
+
+  public void setCount(String count) {
+    this.count = count;
+  }
+
+  @Override
+  public String toString() {
+    String result = "";
+    for (CategoryDTO category : categories) {
+      result += "Category: " + category.toString();
+    }
+    return result;
   }
 }
