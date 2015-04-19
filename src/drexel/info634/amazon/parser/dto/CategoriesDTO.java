@@ -8,8 +8,8 @@ import java.util.List;
  */
 public class CategoriesDTO {
 
-  private String count = "0";
   private final List<CategoryDTO> categories = new ArrayList<>();
+  private String count = "0";
 
   public void add(CategoryDTO category) {
     categories.add(category);

@@ -5,30 +5,32 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Handles identification and parsing of values from a given line of data. Created by Rob on 4/15/2015.
+ * Handles identification and parsing of values from a given line of data. Created by Rob on
+ * 4/15/2015.
  */
 class LineParser {
-  static Pattern id                       = Pattern.compile("Id:\\s{3}(.*)");
-  static Pattern asin                     = Pattern.compile("ASIN:\\s(.*)");
+
+  static Pattern id = Pattern.compile("Id:\\s{3}(.*)");
+  static Pattern asin = Pattern.compile("ASIN:\\s(.*)");
   static Pattern title = Pattern.compile("\\s{2,3}title:\\s(.*)");
-  static Pattern group                    = Pattern.compile("\\s{2}group:\\s(.*)");
-  static Pattern salesrank                = Pattern.compile("\\s{2}salesrank:\\s(.*)");
-  static Pattern similar                  = Pattern.compile("\\s{2}similar:\\s(.*)");
-  static Pattern similarCount             = Pattern.compile("\\s{2}similar:\\s(\\d+).*");
-  static Pattern similarItemsDelimiter    = Pattern.compile("\\s{2}");
-  static Pattern categories               = Pattern.compile("\\s{2}categories:\\s(.*)");
+  static Pattern group = Pattern.compile("\\s{2}group:\\s(.*)");
+  static Pattern salesrank = Pattern.compile("\\s{2}salesrank:\\s(.*)");
+  static Pattern similar = Pattern.compile("\\s{2}similar:\\s(.*)");
+  static Pattern similarCount = Pattern.compile("\\s{2}similar:\\s(\\d+).*");
+  static Pattern similarItemsDelimiter = Pattern.compile("\\s{2}");
+  static Pattern categories = Pattern.compile("\\s{2}categories:\\s(.*)");
   static Pattern categoriesItemsDelimiter = Pattern.compile("(\\u007C)");
-  static Pattern categoriesItemName       = Pattern.compile("(.*)\\[.*\\]");
-  static Pattern categoriesItemID         = Pattern.compile(".*\\[(.*)\\]");
-  static Pattern reviews                  = Pattern.compile("\\s{2}reviews:\\s.*");
-  static Pattern reviewsTotal             = Pattern.compile("\\s{2}reviews:\\stotal:\\s(\\S+).*");
+  static Pattern categoriesItemName = Pattern.compile("(.*)\\[.*\\]");
+  static Pattern categoriesItemID = Pattern.compile(".*\\[(.*)\\]");
+  static Pattern reviews = Pattern.compile("\\s{2}reviews:\\s.*");
+  static Pattern reviewsTotal = Pattern.compile("\\s{2}reviews:\\stotal:\\s(\\S+).*");
   static Pattern reviewsDownloaded = Pattern.compile("\\s{2}reviews:\\stotal:\\s\\S+"
                                                      + "\\s{2}downloaded:\\s(\\S+).*");
   static Pattern reviewsDownloadAvgRating = Pattern.compile("\\s{2}reviews:\\stotal:\\s\\S+"
                                                             + "\\s{2}downloaded:\\s\\S+"
                                                             + "\\s{2}avg"
                                                             + "\\srating:\\s(\\S+)");
-  static Pattern reviewsItemDate          = Pattern.compile("\\s{4}(\\d{4}-\\d{1,2}-\\d{1,2}).*");
+  static Pattern reviewsItemDate = Pattern.compile("\\s{4}(\\d{4}-\\d{1,2}-\\d{1,2}).*");
   static Pattern reviewsItemCustomer = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
                                                        + "\\s{2}cutomer:\\s+(\\S+).*");
   static Pattern reviewsItemRating = Pattern.compile("\\s{4}\\d{4}-\\d{1,2}-\\d{1,2}"
@@ -43,7 +45,7 @@ class LineParser {
                                                       + "\\s{2}rating:\\s\\S+"
                                                       + "\\s{2}votes:\\s{1,3}\\S+"
                                                       + "\\s{2}helpful:\\s{1,3}(\\S+)");
-  static Pattern discontinuedProduct      = Pattern.compile("\\s{2}discontinued\\sproduct");
+  static Pattern discontinuedProduct = Pattern.compile("\\s{2}discontinued\\sproduct");
 
   static boolean isID(String line) {
     return id.matcher(line).matches();
@@ -51,6 +53,13 @@ class LineParser {
 
   static String parseID(String line) {
     return parseLine(line, id).group(1);
+  }
+
+  private static MatchResult parseLine(String line, Pattern pattern) {
+    Matcher matcher = pattern.matcher(line);
+    //noinspection ResultOfMethodCallIgnored
+    matcher.matches(); // Necessary to set the match groups
+    return matcher.toMatchResult();
   }
 
   static boolean isASIN(String line) {
@@ -160,20 +169,13 @@ class LineParser {
     return parseLine(line, reviewsItemHelpful).group(1);
   }
 
+  // *************PRIVATE METHODS*****************
+
   static boolean isDiscontinuedProduct(String line) {
     return discontinuedProduct.matcher(line).matches();
   }
 
-  // *************PRIVATE METHODS*****************
-
   static boolean isBlankLine(String line) {
     return line != null && line.isEmpty();
-  }
-
-  private static MatchResult parseLine(String line, Pattern pattern) {
-    Matcher matcher = pattern.matcher(line);
-    //noinspection ResultOfMethodCallIgnored
-    matcher.matches(); // Necessary to set the match groups
-    return matcher.toMatchResult();
   }
 }
