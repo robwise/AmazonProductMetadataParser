@@ -28,48 +28,21 @@ class ProductFactory {
     currentLineIndex = 0;
     productDTO = new ProductDTO();
 
-    if (currentLineIndex < dataLines.size()) {
-      setID();
-    }
-    if (currentLineIndex < dataLines.size()) {
-      setASIN();
-    }
-    if (currentLineIndex < dataLines.size()) {
-      setDiscontinued();
-    }
-    if (currentLineIndex < dataLines.size()) {
+    setID();
+    setASIN();
+    setDiscontinued();
+    if (!productDTO.discontinued.equals("discontinued product")) {
       setTitle();
-    }
-    if (currentLineIndex < dataLines.size()) {
       setGroup();
-    }
-    if (currentLineIndex < dataLines.size()) {
       setSalesrank();
-    }
-    if (currentLineIndex < dataLines.size()) {
       setSimilar();
-    }
-    if (currentLineIndex < dataLines.size()) {
       setCategories();
-    }
-    if (currentLineIndex < dataLines.size()) {
       setReviews();
     }
-
     return productDTO;
   }
 
   // PRIVATE METHODS
-
-  private void setDiscontinued() {
-    String line = dataLines.get(currentLineIndex);
-    if (LineParser.isDiscontinuedProduct(line)) {
-      productDTO.discontinued = "DISCONTINUED";
-      currentLineIndex++;
-    } else {
-      productDTO.discontinued = "AVAILABLE";
-    }
-  }
 
   private void setID() throws InvalidAttributesException {
     String line = dataLines.get(currentLineIndex);
@@ -90,6 +63,16 @@ class ProductFactory {
     } else {
       throw new InvalidAttributesException(
           "ASIN not found on line " + currentLineIndex + ": " + line);
+    }
+  }
+
+  private void setDiscontinued() {
+    String line = dataLines.get(currentLineIndex);
+    if (LineParser.isDiscontinuedProduct(line)) {
+      productDTO.discontinued = "discontinued product";
+      currentLineIndex++;
+    } else {
+      productDTO.discontinued = "product available";
     }
   }
 
@@ -158,7 +141,6 @@ class ProductFactory {
     // Use categories count to determine how many lines we need to parse
     int lastCategoryLineIndex = currentLineIndex + categoriesCount;
 
-
     // Parse each line into a CategoryDTO and add to categories
     while (currentLineIndex < lastCategoryLineIndex) {
       currentLineIndex++;
@@ -201,7 +183,6 @@ class ProductFactory {
     while (currentLineIndex <= dataLines.size() - 1) {
       line = dataLines.get(currentLineIndex);
       ReviewDTO review = new ReviewDTO();
-      System.out.println("Review Date: " + line);
       review.setDate(LineParser.parseReviewDate(line));
       review.setCustomer(LineParser.parseReviewCustomer(line));
       review.setRating(LineParser.parseReviewRating(line));

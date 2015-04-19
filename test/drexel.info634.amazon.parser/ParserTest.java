@@ -29,7 +29,8 @@ public class ParserTest {
   @Test
   public void testParseData() throws IOException {
     String expectedParsedData = "0" + LINE_SEPARATOR
-                                + "DISCONTINUED" + LINE_SEPARATOR
+                                + "0771044445" + LINE_SEPARATOR
+                                + "discontinued product" + LINE_SEPARATOR
                                 + "1" + LINE_SEPARATOR
                                 + "0827229534" + LINE_SEPARATOR
                                 + "Patterns of Preaching: A Sermon Sampler" + LINE_SEPARATOR

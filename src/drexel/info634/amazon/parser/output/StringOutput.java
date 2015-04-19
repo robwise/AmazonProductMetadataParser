@@ -21,16 +21,16 @@ public class StringOutput implements Output {
   @Override
   public void createProduct(ProductDTO productDTO) throws IOException {
     result += productDTO.id + System.lineSeparator();
-    if (productDTO.discontinued.equals("DISCONTINUED")) {
+    result += productDTO.asin + System.lineSeparator();
+    if (productDTO.discontinued.equals("discontinued product")) {
       result += productDTO.discontinued + System.lineSeparator();
       return;
     }
-    result += productDTO.asin + System.lineSeparator();
     result += productDTO.title + System.lineSeparator();
     result += productDTO.group + System.lineSeparator();
     result += productDTO.salesrank + System.lineSeparator();
-    String similarCount = productDTO.similarCount + System.lineSeparator();
-    result += similarCount;
+    String similarCount = productDTO.similarCount;
+    result += similarCount + System.lineSeparator();
     if (similarCount != null && !productDTO.similarCount.equals("0")) {
       for (String similarItem : productDTO.similarItems) {
         result += similarItem + System.lineSeparator();
