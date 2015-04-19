@@ -18,35 +18,38 @@ import drexel.info634.amazon.parser.output.ConsoleOutput;
 import drexel.info634.amazon.parser.output.Output;
 
 /**
- * Parses Amazon product metadata text file into Java objects.<br> See <a
- * href="https://snap.stanford.edu/data/amazon-meta.html">Data Source</a><br> <br> Created by Rob
- * Wise on 4/15/2015. <br>
+ * Parses Amazon product metadata text file into Java objects.
+ * <p>
+ * See <a href="https://snap.stanford.edu/data/amazon-meta.html">Data Source</a>
+ * <p>
+ * Created by Rob Wise on 4/15/2015.
  */
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class Parser {
 
   private final static Charset ENCODING = StandardCharsets.UTF_8;
   private final static int DATA_START_LINE = 3;
+  private final Path amazonData;
+  private final Output output;
+  private final ProductFactory fProduct;
+  private int lineLimit;
+  private int lineNumber;
+  private int productCount;
+  private String line;
+  private BufferedReader reader;
+  public Parser(String pathString, Output output) {
+    this.amazonData = Paths.get(pathString);
+    this.output = output;
+    fProduct = new ProductFactory();
+  }
 
   public static void main(String... args) throws IOException {
     Parser parser = new Parser("resources/amazon-meta.txt", new ConsoleOutput());
     parser.parse();
   }
 
-  private final Path amazonData;
-  private final Output output;
-  private final ProductFactory fProduct;
-
-  private int lineLimit;
-  private int lineNumber;
-  private int productCount;
-  private String line;
-  private BufferedReader reader;
-
-  public Parser(String pathString, Output output) {
-    this.amazonData = Paths.get(pathString);
-    this.output = output;
-    fProduct = new ProductFactory();
+  public void parse() throws IOException {
+    parse(-1);
   }
 
   public void parse(int lineLimit) throws IOException {
@@ -93,8 +96,12 @@ public class Parser {
     System.out.println("Parse complete: " + productCount + " Products Created...");
   }
 
-  private boolean readerAtEndOfData() {
-    return null == line || lineNumber == lineLimit;
+  private void initializeFields(int lineLimit, BufferedReader reader) {
+    this.lineLimit = lineLimit;
+    this.reader = reader;
+    lineNumber = 0;
+    productCount = 0;
+    line = null;
   }
 
   private void moveReaderToDataStart(BufferedReader reader) throws IOException {
@@ -105,12 +112,8 @@ public class Parser {
     }
   }
 
-  private void initializeFields(int lineLimit, BufferedReader reader) {
-    this.lineLimit = lineLimit;
-    this.reader = reader;
-    lineNumber = 0;
-    productCount = 0;
-    line = null;
+  private boolean readerAtEndOfData() {
+    return null == line || lineNumber == lineLimit;
   }
 
   private void outputProduct(List<String> productLines)
@@ -124,8 +127,8 @@ public class Parser {
     }
   }
 
-  public void parse() throws IOException {
-    parse(-1);
+  private boolean readerAtEndOfProduct() {
+    return line.isEmpty();
   }
 
   public String getFirstLines(int numLines) throws IOException {
@@ -139,10 +142,6 @@ public class Parser {
       }
     }
     return lines;
-  }
-
-  private boolean readerAtEndOfProduct() {
-    return line.isEmpty();
   }
 
 }
