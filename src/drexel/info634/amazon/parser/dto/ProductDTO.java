@@ -13,8 +13,7 @@ public class ProductDTO {
   public String title;
   public String group;
   public String salesrank;
-  public String similarCount;
-  public String[] similarItems;
+  public SimilarItemsDTO similars;
   public CategoriesDTO categories;
   public ReviewsDTO reviews;
   public String discontinued;

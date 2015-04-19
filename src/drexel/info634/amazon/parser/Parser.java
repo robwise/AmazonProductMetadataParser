@@ -18,9 +18,11 @@ import drexel.info634.amazon.parser.output.ConsoleOutput;
 import drexel.info634.amazon.parser.output.Output;
 
 /**
- * Parses Amazon product metadata text file into Java objects.<br> See <a
- * href="https://snap.stanford.edu/data/amazon-meta.html">Data Source</a><br> <br> Created by Rob
- * Wise on 4/15/2015. <br>
+ * Parses Amazon product metadata text file into Java objects.
+ * <p>
+ * See <a href="https://snap.stanford.edu/data/amazon-meta.html">Data Source</a>
+ * <p>
+ * Created by Rob Wise on 4/15/2015.
  */
 @SuppressWarnings({"UseOfSystemOutOrSystemErr", "CallToPrintStackTrace"})
 public class Parser {

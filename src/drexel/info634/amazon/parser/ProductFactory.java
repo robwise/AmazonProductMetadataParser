@@ -12,9 +12,12 @@ import drexel.info634.amazon.parser.dto.CategoryItemDTO;
 import drexel.info634.amazon.parser.dto.ProductDTO;
 import drexel.info634.amazon.parser.dto.ReviewDTO;
 import drexel.info634.amazon.parser.dto.ReviewsDTO;
+import drexel.info634.amazon.parser.dto.SimilarItemsDTO;
 
 /**
- * Creates a {@code ProductDTO} out of raw text data. Created by Rob on 4/16/2015.
+ * Creates a {@code ProductDTO} out of raw text data.
+ * <p>
+ * Created by Rob on 4/16/2015.
  */
 class ProductFactory {
 
@@ -116,9 +119,11 @@ class ProductFactory {
           "Similar not found on line " + currentLineIndex + ": " + line);
     }
     int similarCount = Integer.parseInt(LineParser.parseSimilarCount(line));
-    productDTO.similarCount = String.valueOf(similarCount);
     if (similarCount > 0) {
-      productDTO.similarItems = LineParser.parseSimilarItems(line);
+      SimilarItemsDTO similarItems = new SimilarItemsDTO();
+      similarItems.count = String.valueOf(similarCount);
+      similarItems.similarItemASINs = LineParser.parseSimilarItems(line);
+      productDTO.similars = similarItems;
     }
     currentLineIndex++;
   }
