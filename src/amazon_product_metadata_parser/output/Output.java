@@ -1,9 +1,9 @@
-package drexel.info634.amazon.parser.output;
+package amazon_product_metadata_parser.output;
 
 import java.io.Closeable;
 import java.io.IOException;
 
-import drexel.info634.amazon.parser.dto.ProductDTO;
+import amazon_product_metadata_parser.dto.ProductDTO;
 
 /**
  * Interface describing an object that can create products fed by the {@code Parser}. <br><br>

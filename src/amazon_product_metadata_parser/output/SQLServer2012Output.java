@@ -1,4 +1,4 @@
-package drexel.info634.amazon.parser.output;
+package amazon_product_metadata_parser.output;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import drexel.info634.amazon.parser.dto.ProductDTO;
+import amazon_product_metadata_parser.dto.ProductDTO;
 
 /**
  * Outputs product data to the SQL Server 2012 database "AmazonData" using Windows
@@ -15,26 +15,15 @@ import drexel.info634.amazon.parser.dto.ProductDTO;
  */
 public class SQLServer2012Output implements Output {
 
-  // TODO: Erase this
-  public static void main(String... args) throws IOException {
-    SQLServer2012Output output = new SQLServer2012Output("ROB-PC", "AdventureWorks2012");
-    output.open();
-    output.createProduct(null);
-    output.close();
-  }
-
   private static final String
       SQL_SERVER_DRIVER_CLASS_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-
+  private static final String PC_NAME_WINDOWS_ENVIRONMENT_VARIABLE = "COMPUTERNAME";
   private final String serverUrl;
-  private final String pcName;
+  private final String pcName = System.getenv(PC_NAME_WINDOWS_ENVIRONMENT_VARIABLE);
   private final String databaseName;
-
   private Connection conn;
 
-
-  public SQLServer2012Output(String pcName, String databaseName) {
-    this.pcName = pcName;
+  public SQLServer2012Output(String databaseName) {
     this.databaseName = databaseName;
     serverUrl = buildServerURL();
   }
@@ -46,6 +35,14 @@ public class SQLServer2012Output implements Output {
            + ";databaseName="
            + databaseName
            + ";integratedSecurity=true";
+  }
+
+  // TODO: Erase this
+  public static void main(String... args) throws IOException {
+    SQLServer2012Output output = new SQLServer2012Output("AdventureWorks2012");
+    output.open();
+    output.createProduct(null);
+    output.close();
   }
 
   @Override

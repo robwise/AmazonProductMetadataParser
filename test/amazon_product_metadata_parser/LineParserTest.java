@@ -1,4 +1,4 @@
-package drexel.info634.amazon.parser;
+package amazon_product_metadata_parser;
 
 import org.junit.Test;
 
@@ -10,7 +10,8 @@ import static org.junit.Assert.assertTrue;
  * Created by Rob on 4/15/2015.
  */
 public class LineParserTest {
-  static final String[] sampleData = {
+
+  private static final String[] sampleData = {
     "Id:   1",
     "ASIN: 0827229534",
     "  title: Patterns of Preaching: A Sermon Sampler",
