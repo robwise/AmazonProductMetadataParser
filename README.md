@@ -16,40 +16,33 @@ You will most likely want to do something other than simply print the data to yo
 Here is an example of using the `Parser` with `ConsoleOutput`.
 
 ```java
-import drexel.info634.amazon.parser.Parser;
-import drexel.info634.amazon.parser.output.ConsoleOutput;
-import drexel.info634.amazon.parser.output.Output;
-
 import java.io.IOException;
+import amazon_product_metadata_parser.Parser;
+import amazon_product_metadata_parser.output.ConsoleOutput;
+import amazon_product_metadata_parser.output.Output;
 
 public class YourClass {
-    public void yourMethod() {
-        String pathToAmazonMetaFile = "{your path here}";
-        Output output = new ConsoleOutput();
 
-        // Create the Parser object
-        Parser parser = new Parser(pathToAmazonMetaFile, output);
+  public static void main(String... args) {
+    String pathToAmazonMetaFile = "{your path here}";
+    Output output = new ConsoleOutput();
 
-        // Start the parsing process, which will call the Output object's
-        // createProduct() method 548,552 times, each time passing in a ProductDTO object
-        try {
-            parser.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // Create the Parser object
+    Parser parser = new Parser(pathToAmazonMetaFile, output);
+
+    // Start the parsing process which calls output.createProduct() for each parsed product
+    try { 
+        parser.parse();
+    } catch (IOException e) { e.printStackTrace(); }
+  }
 }
-
 ```
 
-Because the dataset is so large, the program sends the parsed `ProductDTO` objects to the designated `Output` class as it parses them (as opposed to waiting until the end) much like a stream. This avoids trying to keep 548,552 objects in memory! All you need to do is create an object that implements the interface and put what you want to do with each `ProductDTO` in the `createProduct(ProductDTO productDTO`) method. For example, here is the `ConsoleOutput` object:
+Because the dataset is so large, the program sends the parsed `ProductDTO` objects to the designated `Output` class as it parses them (as opposed to waiting until the end) much like a stream. This avoids trying to keep 548,552 objects in memory! All you need to do is create an object that implements the interface and put what you want to do with each `ProductDTO` in the `createProduct(ProductDTO productDTO`) method. Here is an example of the `ConsoleOutput` object:
 
 ```java
-package drexel.info634.amazon.parser.output;
-
 import java.io.IOException;
-
-import drexel.info634.amazon.parser.dto.ProductDTO;
+import amazon_product_metadata_parser.dto.ProductDTO;
 
 /**
  * Simply prints product data to the console
@@ -91,6 +84,9 @@ Feel free to fork this project or submit a [pull request](https://github.com/rob
 
 ## Reporting Bugs
 Please use the [issues page](https://github.com/robwise/AmazonProductMetadataParser/issues) for reporting any bugs you encounter.
+
+## License
+MIT (see [LICENSE](LICENSE))
 
 ## Authors
 Rob Wise
