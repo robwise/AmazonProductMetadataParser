@@ -33,7 +33,7 @@ class ProductDTOFactory {
     dataLines = data;
     currentLineIndex = 0;
 
-    // Get base variables that we need regardless if discontinued
+    // Initialize arguments to pass to ProductDTO constructor
     String id = getID();
     String asin = getASIN();
     String title = null;
@@ -44,7 +44,7 @@ class ProductDTOFactory {
     ReviewsDTO reviews = null;
     boolean discontinued = getDiscontinued();
 
-    // Make either a discontinued or a standard ProductDTO
+    // If not discontinued, get non-discontinued data
     if (!discontinued) {
       title = getTitle();
       group = getGroup();
@@ -57,8 +57,6 @@ class ProductDTOFactory {
     return new ProductDTO(id, asin, title, group, salesrank, similarItems, categories, reviews,
                           discontinued);
   }
-
-  // PRIVATE METHODS
 
   private String getID() throws FailedValidationException {
     String line = dataLines[currentLineIndex];
