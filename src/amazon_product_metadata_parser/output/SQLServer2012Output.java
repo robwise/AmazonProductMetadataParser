@@ -11,8 +11,9 @@ import amazon_product_metadata_parser.dto.ProductDTO;
 
 /**
  * Outputs product data to the SQL Server 2012 database "AmazonData" using Windows
- * authentication.<br><br> Created by Rob Wise <robert.wise@outlook.com> on 4/17/2015.
+ * authentication.
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class SQLServer2012Output implements Output {
 
   private static final String
