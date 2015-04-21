@@ -2,9 +2,6 @@ package amazon_product_metadata_parser.output;
 
 import org.junit.Test;
 
-/**
- * Created by Rob Wise <robert.wise@outlook.com> on 4/18/2015.
- */
 public class SQLServer2012OutputTest {
 
   @Test

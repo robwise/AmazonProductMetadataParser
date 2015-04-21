@@ -23,12 +23,15 @@ class LineParser {
   static final Pattern categoriesItemName         = Pattern.compile("(.*)\\[.*\\]");
   static final Pattern categoriesItemID           = Pattern.compile(".*\\[(.*)\\]");
   static final Pattern reviews                    = Pattern.compile("\\s{2}reviews:\\s.*");
-  static final Pattern reviewsTotal               = Pattern.compile(
-      "\\s{2}reviews:\\stotal:\\s(\\S+).*");
-  static final Pattern reviewsDownloaded          = Pattern.compile("\\s{2}reviews:\\stotal:\\s\\S+"
-                                                     + "\\s{2}downloaded:\\s(\\S+).*");
-  static final Pattern reviewsDownloadedAvgRating = Pattern.compile("\\s{2}reviews:\\stotal:\\s\\S+"
-                                                            + "\\s{2}downloaded:\\s\\S+"
+  static final Pattern reviewsTotal               = Pattern.compile("\\s{2}reviews:"
+                                                                    + "\\stotal:\\s(\\S+).*");
+  static final Pattern reviewsDownloaded          = Pattern.compile("\\s{2}reviews:"
+                                                                    + "\\stotal:\\s\\S+"
+                                                                    + "\\s{2}downloaded:\\s(\\S+)"
+                                                                    + ".*");
+  static final Pattern reviewsDownloadedAvgRating = Pattern.compile("\\s{2}reviews:"
+                                                                    + "\\stotal:\\s\\S+"
+                                                                    + "\\s{2}downloaded:\\s\\S+"
                                                                     + "\\s{2}avg\\srating:\\s"
                                                                     + "(\\S+)");
   static final Pattern reviewsItemDate            = Pattern.compile(
@@ -107,8 +110,6 @@ class LineParser {
   }
 
   static String[] parseSimilarItems(String line) {
-//    int startOfSimilarItems = parseLine(line, similarCount).end(1) + 2;
-//    String similarItems = line.substring(startOfSimilarItems, line.length());
     String items = parseLine(line, similarItems).group(1);
     items = items.trim();
     return similarItemsDelimiter.split(items);

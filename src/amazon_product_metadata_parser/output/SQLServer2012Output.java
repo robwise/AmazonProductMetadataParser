@@ -16,12 +16,14 @@ import amazon_product_metadata_parser.dto.ProductDTO;
 public class SQLServer2012Output implements Output {
 
   private static final String
-      SQL_SERVER_DRIVER_CLASS_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+                              SQL_SERVER_DRIVER_CLASS_NAME
+                                                                   = "com.microsoft.sqlserver"
+                                                                     + ".jdbc.SQLServerDriver";
   private static final String PC_NAME_WINDOWS_ENVIRONMENT_VARIABLE = "COMPUTERNAME";
   private final String serverUrl;
   private final String pcName = System.getenv(PC_NAME_WINDOWS_ENVIRONMENT_VARIABLE);
-  private final String databaseName;
-  private Connection conn;
+  private final String     databaseName;
+  private       Connection conn;
 
   public SQLServer2012Output(String databaseName) {
     this.databaseName = databaseName;

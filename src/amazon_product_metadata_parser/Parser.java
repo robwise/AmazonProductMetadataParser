@@ -26,9 +26,9 @@ import amazon_product_metadata_parser.output.Output;
 @SuppressWarnings({"UseOfSystemOutOrSystemErr", "CallToPrintStackTrace"})
 public class Parser {
 
-  private final static Charset ENCODING = StandardCharsets.UTF_8;
-  private final static int DATA_START_LINE = 4;
-  private final Path amazonData;
+  private final static Charset ENCODING        = StandardCharsets.UTF_8;
+  private final static int     DATA_START_LINE = 4;
+  private final Path   amazonData;
   private final Output output;
   private final ProductDTOFactory fProduct;
   private       int               lineLimit;
@@ -68,7 +68,8 @@ public class Parser {
 
       while (!readerAtEndOfData()) {
         productLines = readLinesUntilPastEndOfAProduct();
-        outputProduct(productLines);
+        ProductDTO productDTO = fProduct.build(productLines);
+        outputProductDTO(productDTO);
       }
 
     } catch (FailedValidationException e) {
@@ -121,9 +122,9 @@ public class Parser {
     }
   }
 
-  private void outputProduct(String[] productLines) throws FailedValidationException, IOException {
-    ProductDTO product = fProduct.build(productLines);
-    output.execute(product);
+  private void outputProductDTO(ProductDTO productDTO)
+      throws FailedValidationException, IOException {
+    output.execute(productDTO);
     productsParsedCount++;
     if (productsParsedCount % 1000 == 0) {
       System.out.println("***Status: " + productsParsedCount + " Products Created...");
@@ -148,6 +149,7 @@ public class Parser {
     return currLine == null || currLine.isEmpty();
   }
 
+  // TODO: refactor Parser.getFirstLines()
   public String getFirstLines(int numLines) throws IOException {
     String lines = "";
     try (BufferedReader reader = Files.newBufferedReader(amazonData, ENCODING)) {
