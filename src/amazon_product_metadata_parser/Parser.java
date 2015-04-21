@@ -123,7 +123,7 @@ public class Parser {
 
   private void outputProduct(String[] productLines) throws FailedValidationException, IOException {
     ProductDTO product = fProduct.build(productLines);
-    output.createProduct(product);
+    output.execute(product);
     productsParsedCount++;
     if (productsParsedCount % 1000 == 0) {
       System.out.println("***Status: " + productsParsedCount + " Products Created...");

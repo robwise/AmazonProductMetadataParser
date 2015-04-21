@@ -29,7 +29,7 @@ public class TextFileOutput implements Output {
   }
 
   @Override
-  public void createProduct(ProductDTO productDTO) throws IOException {
+  public void execute(ProductDTO productDTO) throws IOException {
     bw.write(productDTO.toString());
     bw.newLine();
   }

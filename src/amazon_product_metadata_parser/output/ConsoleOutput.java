@@ -17,7 +17,7 @@ public class ConsoleOutput implements Output {
   }
 
   @Override
-  public void createProduct(ProductDTO productDTO) throws IOException {
+  public void execute(ProductDTO productDTO) throws IOException {
     System.out.println(productDTO.toString());
     System.out.println();
   }

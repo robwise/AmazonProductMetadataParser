@@ -20,7 +20,7 @@ public class StringOutput implements Output {
   }
 
   @Override
-  public void createProduct(ProductDTO productDTO) throws IOException {
+  public void execute(ProductDTO productDTO) throws IOException {
     result += productDTO.toString() + String.format("%n");
   }
 

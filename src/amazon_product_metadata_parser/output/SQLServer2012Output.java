@@ -41,7 +41,7 @@ public class SQLServer2012Output implements Output {
   public static void main(String... args) throws IOException {
     SQLServer2012Output output = new SQLServer2012Output("AdventureWorks2012");
     output.open();
-    output.createProduct(null);
+    output.execute(null);
     output.close();
   }
 
@@ -57,7 +57,7 @@ public class SQLServer2012Output implements Output {
   }
 
   @Override
-  public void createProduct(ProductDTO productDTO) throws IOException {
+  public void execute(ProductDTO productDTO) throws IOException {
     // TODO: actually write ProductDTO to server
     // Create and execute an SQL statement that returns some data.
     ResultSet queryResults = null;
