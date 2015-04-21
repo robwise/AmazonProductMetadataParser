@@ -10,16 +10,13 @@ import java.sql.Statement;
 import amazon_product_metadata_parser.dto.ProductDTO;
 
 /**
- * Outputs product data to the SQL Server 2012 database "AmazonData" using Windows
- * authentication.
+ * Outputs product data to the SQL Server 2012 database "AmazonData" using Windows authentication.
  */
 @SuppressWarnings("SpellCheckingInspection")
 public class SQLServer2012Output implements Output {
 
-  private static final String
-                              SQL_SERVER_DRIVER_CLASS_NAME
-                                                                   = "com.microsoft.sqlserver"
-                                                                     + ".jdbc.SQLServerDriver";
+  private static final String SQL_SERVER_DRIVER_CLASS_NAME =
+      "com.microsoft.sqlserver.jdbc.SQLServerDriver";
   private static final String PC_NAME_WINDOWS_ENVIRONMENT_VARIABLE = "COMPUTERNAME";
   private final String serverUrl;
   private final String pcName = System.getenv(PC_NAME_WINDOWS_ENVIRONMENT_VARIABLE);
