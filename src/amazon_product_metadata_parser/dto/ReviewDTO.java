@@ -15,7 +15,7 @@ public class ReviewDTO {
   public final int       votes;
   public final int       helpful;
 
-  public ReviewDTO(LocalDate date, String customer, int rating, int votes, int helpful)
+  ReviewDTO(LocalDate date, String customer, int rating, int votes, int helpful)
       throws FailedValidationException {
     this.date = date;
     this.customer = customer;

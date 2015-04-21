@@ -1,28 +1,19 @@
-package amazon_product_metadata_parser;
+package amazon_product_metadata_parser.dto;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import amazon_product_metadata_parser.dto.CategoriesDTO;
-import amazon_product_metadata_parser.dto.CategoryDTO;
-import amazon_product_metadata_parser.dto.CategoryItemDTO;
-import amazon_product_metadata_parser.dto.FailedValidationException;
-import amazon_product_metadata_parser.dto.ProductDTO;
-import amazon_product_metadata_parser.dto.ReviewDTO;
-import amazon_product_metadata_parser.dto.ReviewsDTO;
-import amazon_product_metadata_parser.dto.SimilarItemsDTO;
-
 /**
  * Creates a {@link ProductDTO} out of raw text data.
  */
-class ProductDTOFactory {
+public class ProductDTOFactory {
 
   private String[] dataLines;
   private int      currentLineIndex;
 
-  ProductDTO build(String[] data) throws FailedValidationException {
+  public ProductDTO build(String[] data) throws FailedValidationException {
     if (null == data) {
       throw new FailedValidationException("Data is null");
     } else if (0 == data.length) {

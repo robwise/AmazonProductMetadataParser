@@ -17,9 +17,9 @@ public class ProductDTO {
   public final ReviewsDTO      reviews;
   public final boolean         discontinued;
 
-  public ProductDTO(String id, String asin, String title, String group, int salesrank,
-                    SimilarItemsDTO similarItems, CategoriesDTO categories, ReviewsDTO reviews,
-                    boolean discontinued) throws FailedValidationException {
+  ProductDTO(String id, String asin, String title, String group, int salesrank,
+             SimilarItemsDTO similarItems, CategoriesDTO categories, ReviewsDTO reviews,
+             boolean discontinued) throws FailedValidationException {
     this.id = id;
     this.asin = asin;
     this.title = title;

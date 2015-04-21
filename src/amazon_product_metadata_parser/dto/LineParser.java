@@ -1,12 +1,11 @@
-package amazon_product_metadata_parser;
+package amazon_product_metadata_parser.dto;
 
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Handles identification and parsing of values from a given line of data. Created by Rob on
- * 4/15/2015.
+ * Handles identification and parsing of values from a given line of data.
  */
 class LineParser {
 
@@ -175,8 +174,6 @@ class LineParser {
   static String parseReviewHelpful(String line) {
     return parseLine(line, reviewsItemHelpful).group(1);
   }
-
-  // *************PRIVATE METHODS*****************
 
   static boolean isDiscontinuedProduct(String line) {
     return discontinuedProduct.matcher(line).matches();

@@ -12,7 +12,7 @@ public class ReviewsDTO {
   public final double      avgRating;
   public final ReviewDTO[] reviews;
 
-  public ReviewsDTO(int total, int downloaded, double avgRating, ReviewDTO[] reviews)
+  ReviewsDTO(int total, int downloaded, double avgRating, ReviewDTO[] reviews)
       throws FailedValidationException {
     this.total = total;
     this.downloaded = downloaded;

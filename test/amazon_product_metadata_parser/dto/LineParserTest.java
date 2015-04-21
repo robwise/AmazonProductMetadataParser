@@ -1,4 +1,4 @@
-package amazon_product_metadata_parser;
+package amazon_product_metadata_parser.dto;
 
 import org.junit.Test;
 
@@ -6,9 +6,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Rob on 4/15/2015.
- */
 public class LineParserTest {
 
   private static final String[] sampleData = {

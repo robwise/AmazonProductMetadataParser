@@ -8,11 +8,7 @@ public class CategoriesDTO {
   public final CategoryDTO[] categories;
   public final int           count;
 
-  public CategoriesDTO(CategoryDTO[] categories, String count) throws FailedValidationException {
-    this(categories, Integer.valueOf(count));
-  }
-
-  public CategoriesDTO(CategoryDTO[] categories, int count) throws FailedValidationException {
+  CategoriesDTO(CategoryDTO[] categories, int count) throws FailedValidationException {
     this.categories = categories;
     this.count = count;
     throwExceptionIfInvalid();

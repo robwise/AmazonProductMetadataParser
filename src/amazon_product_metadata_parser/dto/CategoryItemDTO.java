@@ -12,8 +12,8 @@ public class CategoryItemDTO {
   public final boolean lowestChildFlag;
   public final int     depthFromParent;
 
-  public CategoryItemDTO(String name, String id, String parentCategoryItem,
-                         boolean highestParentFlag, boolean lowestChildFlag, int depthFromParent)
+  CategoryItemDTO(String name, String id, String parentCategoryItem,
+                  boolean highestParentFlag, boolean lowestChildFlag, int depthFromParent)
       throws FailedValidationException {
     this.name = name;
     this.id = id;

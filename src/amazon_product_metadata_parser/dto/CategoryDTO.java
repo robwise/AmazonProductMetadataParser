@@ -12,7 +12,7 @@ public class CategoryDTO {
   public final CategoryItemDTO[] categoryItems;
   public final int               categoryItemCount;
 
-  public CategoryDTO(CategoryItemDTO[] categoryItems, int categoryItemCount)
+  CategoryDTO(CategoryItemDTO[] categoryItems, int categoryItemCount)
       throws FailedValidationException {
     this.categoryItems = categoryItems;
     this.categoryItemCount = categoryItemCount;

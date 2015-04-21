@@ -13,6 +13,7 @@ import java.util.List;
 
 import amazon_product_metadata_parser.dto.FailedValidationException;
 import amazon_product_metadata_parser.dto.ProductDTO;
+import amazon_product_metadata_parser.dto.ProductDTOFactory;
 import amazon_product_metadata_parser.output.ConsoleOutput;
 import amazon_product_metadata_parser.output.Output;
 
@@ -21,7 +22,6 @@ import amazon_product_metadata_parser.output.Output;
  * <p>
  * See <a href="https://snap.stanford.edu/data/amazon-meta.html">Data Source</a>
  * <p>
- * Created by Rob Wise on 4/15/2015.
  */
 @SuppressWarnings({"UseOfSystemOutOrSystemErr", "CallToPrintStackTrace"})
 public class Parser {

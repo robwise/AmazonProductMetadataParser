@@ -10,11 +10,7 @@ public class SimilarItemsDTO {
   public final String[] similarItemASINs;
   public final int      count;
 
-  public SimilarItemsDTO(String[] similarItemASINs, String count) {
-    this(similarItemASINs, Integer.valueOf(count));
-  }
-
-  public SimilarItemsDTO(String[] similarItemASINs, int count) {
+  SimilarItemsDTO(String[] similarItemASINs, int count) {
     this.similarItemASINs = similarItemASINs;
     this.count = count;
   }
