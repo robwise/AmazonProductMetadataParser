@@ -3,9 +3,9 @@ package amazon_product_metadata_parser.output;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import amazon_product_metadata_parser.dto.ProductDTO;
 
@@ -21,12 +21,17 @@ public class SQLServer2012Output implements Output {
   private final String serverUrl;
   private final String pcName = System.getenv(PC_NAME_WINDOWS_ENVIRONMENT_VARIABLE);
   private final String     databaseName;
-  private       Connection conn;
+  private       Connection          conn;
+  private int insertStatementsExecuted = 0;
+  private int rowsAffected = 0;
 
-  public SQLServer2012Output(String databaseName) {
+  public SQLServer2012Output(String databaseName, transactSQLStatements queries)
+      throws SQLException {
     this.databaseName = databaseName;
     serverUrl = buildServerURL();
   }
+
+
 
   //  url = "jdbc:sqlserver://MYPC\\SQLEXPRESS;databaseName=MYDB;integratedSecurity=true";
   private String buildServerURL() {
@@ -38,8 +43,8 @@ public class SQLServer2012Output implements Output {
   }
 
   // TODO: Erase this
-  public static void main(String... args) throws IOException {
-    SQLServer2012Output output = new SQLServer2012Output("AdventureWorks2012");
+  public static void main(String... args) throws IOException, SQLException {
+    SQLServer2012Output output = new SQLServer2012Output("AdventureWorks2012", null);
     output.open();
     output.execute(null);
     output.close();
@@ -58,17 +63,15 @@ public class SQLServer2012Output implements Output {
 
   @Override
   public void execute(ProductDTO productDTO) throws IOException {
-    // TODO: actually write ProductDTO to server
-    // Create and execute an SQL statement that returns some data.
     ResultSet queryResults = null;
-    Statement statement = null;
+    PreparedStatement statement = null;
     try {
-      statement = conn.createStatement();
-      String query = "SELECT TOP 10 * FROM Person.Person";
-      queryResults = statement.executeQuery(query);
-      // Iterate through the data in the result set and display it.
-      while (queryResults.next()) {
-        System.out.println(queryResults.getString(4) + " " + queryResults.getString(7));
+      for (int i = 0; i < preparedSQLInsertStatements.length; i++) {
+        statement = preparedSQLInsertStatements[i];
+        statement.clearParameters();
+        statement.
+        rowsAffected += statement.executeUpdate();
+        insertStatementsExecuted++;
       }
     } catch (SQLException e) {
       throw new IOException(e);
