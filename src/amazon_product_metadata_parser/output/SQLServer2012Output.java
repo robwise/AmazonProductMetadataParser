@@ -41,7 +41,7 @@ public class SQLServer2012Output implements Output {
            + ";integratedSecurity=true";
   }
 
-  public static void main(String[] args) throws SQLException, IOException {
+  public static void main(String... args) throws IOException {
     System.out.printf("This program parses the 'amazon-meta.txt' file and inserts the data into "
                       + "a SQL Server 2012 database.%nIt assumes you have set up the appropriate"
                       + " stored procedures and schema in a database named 'AmazonProductMetadata'"
@@ -56,14 +56,13 @@ public class SQLServer2012Output implements Output {
       case "cancel":
         // Fall through
       case "exit":
-        // Fall through
         break;
       default:
-        Parser parser = new Parser(response, new SQLServer2012Output("AmazonProductMetadata", new
-            JDBCStatementsToExecuteImplExample()));
+        SQLServer2012Output output = new SQLServer2012Output("AmazonProductMetadata",
+                                                             new JDBCStatementsToExecuteImplExample());
+        Parser parser = new Parser(response, output);
         parser.parse();
     }
-
   }
 
   @Override
@@ -72,6 +71,9 @@ public class SQLServer2012Output implements Output {
       Class.forName(SQL_SERVER_DRIVER_CLASS_NAME);
       conn = DriverManager.getConnection(serverUrl);
       System.out.println("Connected to SQL Server Database '" + databaseName + "'");
+      statementsToExecute.setConn(conn);
+      statementsToExecute.executeBeforeStatements();
+      updateCounts();
     } catch (ClassNotFoundException | SQLException e) {
       throw new IOException(e);
     }
@@ -79,18 +81,36 @@ public class SQLServer2012Output implements Output {
 
   @Override
   public void execute(ProductDTO productDTO) throws IOException {
-    statementsToExecute.executeProductStatements(productDTO);
+    try {
+      statementsToExecute.executeProductStatements(productDTO);
+    } catch (SQLException e) {
+      String reason = "There was a SQL Exception while trying to execute the statement";
+      throw new IOException(reason, e);
+    }
+    updateCounts();
+  }
+
+  private void updateCounts() {
+    rowsAffected = statementsToExecute.getNumRowsAffected();
+    insertStatementsExecuted = statementsToExecute.getNumStatementsExecuted();
   }
 
   @Override
   public void close() throws IOException {
     try {
+      statementsToExecute.executeAfterStatements();
+      updateCounts();
       if (conn != null) {
         conn.close();
         System.out.println("Closed connection to '" + databaseName + "'");
+        System.out.printf("Number of statements executed: %d%n"
+                          + "Number of rows in affected: %d%n",
+                          insertStatementsExecuted,
+                          rowsAffected);
       }
     } catch (SQLException e) {
-      throw new IOException(e);
+      System.err.println("Error closing database: ");
+      e.printStackTrace();
     }
   }
 }
