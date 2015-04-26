@@ -1,4 +1,4 @@
-package amazon_product_metadata_parser.output;
+package amazon_product_metadata_parser_example_app;
 
 import java.sql.CallableStatement;
 import java.sql.Date;
@@ -10,9 +10,11 @@ import amazon_product_metadata_parser.dto.CategoryDTO;
 import amazon_product_metadata_parser.dto.CategoryItemDTO;
 import amazon_product_metadata_parser.dto.ProductDTO;
 import amazon_product_metadata_parser.dto.ReviewDTO;
+import amazon_product_metadata_parser.output.ProductOutputException;
+import amazon_product_metadata_parser.output.SQLServer2012.SQLServerOperations;
 
 @SuppressWarnings({"resource", "CodeBlock2Expr"})
-public class JDBCStatementsToExecuteImplExample extends JDBCStatementsToExecute {
+public class SQLServerOperationsImplExample extends SQLServerOperations {
 
   private final Map<String, String>            unpreparedBeforeStatements  = new HashMap<>();
   private final Map<String, String>            unpreparedProductStatements = new HashMap<>();
@@ -21,7 +23,7 @@ public class JDBCStatementsToExecuteImplExample extends JDBCStatementsToExecute 
   private final Map<String, CallableStatement> callableProductStatements   = new HashMap<>();
   private final Map<String, CallableStatement> callableAfterStatements     = new HashMap<>();
 
-  public JDBCStatementsToExecuteImplExample() {
+  public SQLServerOperationsImplExample() {
     // Define the schema-dependent statements.
     // Before: these are called once at the beginning
     unpreparedBeforeStatements.put("prepare load tables ", "{call Prepare_Load_Tables}");

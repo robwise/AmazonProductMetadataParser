@@ -1,17 +1,17 @@
-package amazon_product_metadata_parser.output;
+package amazon_product_metadata_parser.output.SQLServer2012;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import amazon_product_metadata_parser.dto.ProductDTO;
 
-abstract public class JDBCStatementsToExecute {
+abstract public class SQLServerOperations {
 
   private Connection conn;
   private int        numRowsAffected;
   private int        numStatementsExecuted;
 
-  public JDBCStatementsToExecute() {
+  public SQLServerOperations() {
     this.numStatementsExecuted = 0;
     this.numRowsAffected = 0;
   }
