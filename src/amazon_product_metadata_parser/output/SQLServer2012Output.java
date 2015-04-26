@@ -26,8 +26,7 @@ public class SQLServer2012Output implements Output {
   private int insertStatementsExecuted = 0;
   private int rowsAffected = 0;
 
-  public SQLServer2012Output(String databaseName, JDBCStatementsToExecute statementsToExecute)
-      throws SQLException {
+  public SQLServer2012Output(String databaseName, JDBCStatementsToExecute statementsToExecute) {
     this.databaseName = databaseName;
     this.statementsToExecute = statementsToExecute;
     serverUrl = buildServerURL();
@@ -80,7 +79,7 @@ public class SQLServer2012Output implements Output {
 
   @Override
   public void execute(ProductDTO productDTO) throws IOException {
-    statementsToExecute.executeQueries(productDTO);
+    statementsToExecute.executeProductStatements(productDTO);
   }
 
   @Override

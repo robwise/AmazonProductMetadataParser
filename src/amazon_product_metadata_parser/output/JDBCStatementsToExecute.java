@@ -11,7 +11,7 @@ abstract public class JDBCStatementsToExecute {
   private int        numRowsAffected;
   private int        numStatementsExecuted;
 
-  public JDBCStatementsToExecute() throws SQLException {
+  public JDBCStatementsToExecute() {
     this.numStatementsExecuted = 0;
     this.numRowsAffected = 0;
   }
@@ -27,7 +27,7 @@ abstract public class JDBCStatementsToExecute {
     this.conn = conn;
   }
 
-  public abstract void executeQueries(ProductDTO productDTO);
+  public abstract void executeProductStatements(ProductDTO productDTO);
 
   public void incrementNumStatementsExecuted() {
     incrementNumStatementsExecuted(1);
@@ -53,12 +53,12 @@ abstract public class JDBCStatementsToExecute {
     return numStatementsExecuted;
   }
 
-  public boolean hasValidConn() throws SQLException {
+  public boolean hasValidConn() {
     try {
-      return null == conn || !conn.isValid(5);
+      return (null == conn) || !conn.isValid(5);
     } catch (SQLException e) {
       String reason = "Called isValid() on connection using an integer less than 0";
-      throw new SQLException(reason, e);
+      throw new RuntimeException(reason, e);
     }
   }
 }
