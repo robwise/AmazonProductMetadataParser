@@ -7,39 +7,42 @@ import amazon_product_metadata_parser.dto.ProductDTO;
 
 abstract public class JDBCStatementsToExecute {
 
-  private final Connection conn;
-  private int numRowsAffected;
-  private int numStatementsExecuted;
+  private Connection conn;
+  private int        numRowsAffected;
+  private int        numStatementsExecuted;
 
-  JDBCStatementsToExecute(Connection conn) throws SQLException {
-    if (!conn.isValid(5)) {
-      throw new SQLException("Attempted to execute SQL Queries with invalid connection");
-    }
-    this.conn = conn;
+  public JDBCStatementsToExecute() throws SQLException {
     this.numStatementsExecuted = 0;
     this.numRowsAffected = 0;
   }
 
-  Connection getConn() {
+  public Connection getConn() {
     return conn;
   }
 
-  public abstract void executeQueries(ProductDTO productDTO);
-
-  public void incrementNumStatementsExecuted(int increment) {
-    numStatementsExecuted += increment;
+  public void setConn(Connection conn) throws SQLException {
+    if (!conn.isValid(5)) {
+      throw new SQLException("Attempted to execute SQL Queries with invalid connection");
+    }
+    this.conn = conn;
   }
+
+  public abstract void executeQueries(ProductDTO productDTO);
 
   public void incrementNumStatementsExecuted() {
     incrementNumStatementsExecuted(1);
   }
 
-  public void incrementNumRowsAffected(int increment) {
-    numRowsAffected += increment;
+  public void incrementNumStatementsExecuted(int increment) {
+    numStatementsExecuted += increment;
   }
 
   public void incrementNumRowsAffected() {
     incrementNumRowsAffected(1);
+  }
+
+  public void incrementNumRowsAffected(int increment) {
+    numRowsAffected += increment;
   }
 
   public int getNumRowsAffected() {
@@ -50,4 +53,12 @@ abstract public class JDBCStatementsToExecute {
     return numStatementsExecuted;
   }
 
+  public boolean hasValidConn() throws SQLException {
+    try {
+      return null == conn || !conn.isValid(5);
+    } catch (SQLException e) {
+      String reason = "Called isValid() on connection using an integer less than 0";
+      throw new SQLException(reason, e);
+    }
+  }
 }

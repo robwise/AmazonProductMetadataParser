@@ -1,6 +1,5 @@
 package amazon_product_metadata_parser.output;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,14 +14,15 @@ public class JDBCStatementsToExecuteImplExample extends JDBCStatementsToExecute 
 
   private List<PreparedStatement> preparedSQLStatements = new ArrayList<>();
 
-  JDBCStatementsToExecuteImplExample(Connection conn) throws SQLException {
-    super(conn);
-    initializePreparedStatements();
+  public JDBCStatementsToExecuteImplExample() throws SQLException {
+    // Constructor does nothing
   }
 
   @Override
   public void executeQueries(ProductDTO productDTO) {
-
+    if (super.hasValidConn()) {
+      // TODO: execute stored procedures
+    }
   }
 
   private void initializePreparedStatements() throws SQLException {
