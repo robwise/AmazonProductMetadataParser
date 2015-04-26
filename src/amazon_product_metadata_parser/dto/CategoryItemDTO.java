@@ -38,11 +38,11 @@ public class CategoryItemDTO {
     if (null == name) {
       throw new FailedValidationException("Name is null");
     }
-    if (depthFromParent > 0 && highestParentFlag) {
+    if ((depthFromParent > 0) && highestParentFlag) {
       throw new FailedValidationException("Flagged as highest parent but has non-zero depth from "
                                           + "parent");
     }
-    if (depthFromParent == 0 && !highestParentFlag) {
+    if ((depthFromParent == 0) && !highestParentFlag) {
       throw new FailedValidationException("Zero depth from parent but not flagged as highest "
                                           + "parent");
     }

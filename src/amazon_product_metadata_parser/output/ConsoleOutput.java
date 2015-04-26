@@ -12,13 +12,13 @@ import amazon_product_metadata_parser.dto.ProductDTO;
 public class ConsoleOutput implements Output {
 
   @Override
-  public void open() throws IOException {
+  public void open() {
     // Nothing to do
   }
 
   @Override
-  public void execute(ProductDTO productDTO) throws IOException {
-    System.out.println(productDTO.toString());
+  public void execute(ProductDTO productDTO) {
+    System.out.println(productDTO);
     System.out.println();
   }
 

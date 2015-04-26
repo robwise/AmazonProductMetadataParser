@@ -16,6 +16,7 @@ import amazon_product_metadata_parser.dto.ProductDTO;
 import amazon_product_metadata_parser.dto.ProductDTOFactory;
 import amazon_product_metadata_parser.output.ConsoleOutput;
 import amazon_product_metadata_parser.output.Output;
+import amazon_product_metadata_parser.output.ProductOutputException;
 
 /**
  * Parses Amazon product metadata text file into Java objects.
@@ -80,6 +81,9 @@ public class Parser {
                           productLines[i]);
       }
       e.printStackTrace();
+    } catch (ProductOutputException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
     } finally {
       output.close();
     }
@@ -97,13 +101,13 @@ public class Parser {
 
   private void moveReaderToDataStart() throws IOException {
     // Set so next read will be the first line of data
-    while (currLineNumber < DATA_START_LINE - 1) {
+    while (currLineNumber < (DATA_START_LINE - 1)) {
       readNextLine();
     }
   }
 
   private boolean readerAtEndOfData() {
-    return null == currLine || currLineNumber == lineLimit;
+    return (null == currLine) || (currLineNumber == lineLimit);
   }
 
   private String[] readLinesUntilPastEndOfAProduct() throws IOException {
@@ -122,11 +126,10 @@ public class Parser {
     }
   }
 
-  private void outputProductDTO(ProductDTO productDTO)
-      throws FailedValidationException, IOException {
+  private void outputProductDTO(ProductDTO productDTO) {
     output.execute(productDTO);
     productsParsedCount++;
-    if (productsParsedCount % 1000 == 0) {
+    if ((productsParsedCount % 1000) == 0) {
       System.out.println("***Status: " + productsParsedCount + " Products Created...");
     }
   }
@@ -146,7 +149,7 @@ public class Parser {
   }
 
   private boolean readerAtEndOfProduct() {
-    return currLine == null || currLine.isEmpty();
+    return (currLine == null) || currLine.isEmpty();
   }
 
   // TODO: refactor Parser.getFirstLines()
@@ -155,7 +158,7 @@ public class Parser {
     try (BufferedReader reader = Files.newBufferedReader(amazonData, ENCODING)) {
       String line;
       int lineCount = 0;
-      while ((line = reader.readLine()) != null && lineCount < numLines) {
+      while ((((line = reader.readLine())) != null) && (lineCount < numLines)) {
         lines += System.lineSeparator() + line;
         lineCount++;
       }

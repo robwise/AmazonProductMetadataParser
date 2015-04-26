@@ -66,27 +66,23 @@ public class SQLServer2012Output implements Output {
   }
 
   @Override
-  public void open() throws IOException {
+  public void open() {
     try {
       Class.forName(SQL_SERVER_DRIVER_CLASS_NAME);
+      //noinspection CallToDriverManagerGetConnection
       conn = DriverManager.getConnection(serverUrl);
       System.out.println("Connected to SQL Server Database '" + databaseName + "'");
       statementsToExecute.setConn(conn);
       statementsToExecute.executeBeforeStatements();
       updateCounts();
     } catch (ClassNotFoundException | SQLException e) {
-      throw new IOException(e);
+      throw new ProductOutputException(e);
     }
   }
 
   @Override
-  public void execute(ProductDTO productDTO) throws IOException {
-    try {
-      statementsToExecute.executeProductStatements(productDTO);
-    } catch (SQLException e) {
-      String reason = "There was a SQL Exception while trying to execute the statement";
-      throw new IOException(reason, e);
-    }
+  public void execute(ProductDTO productDTO) {
+    statementsToExecute.executeProductStatements(productDTO);
     updateCounts();
   }
 
@@ -96,10 +92,10 @@ public class SQLServer2012Output implements Output {
   }
 
   @Override
-  public void close() throws IOException {
+  public void close() {
+    statementsToExecute.executeAfterStatements();
+    updateCounts();
     try {
-      statementsToExecute.executeAfterStatements();
-      updateCounts();
       if (conn != null) {
         conn.close();
         System.out.println("Closed connection to '" + databaseName + "'");
@@ -109,8 +105,8 @@ public class SQLServer2012Output implements Output {
                           rowsAffected);
       }
     } catch (SQLException e) {
-      System.err.println("Error closing database: ");
-      e.printStackTrace();
+      String reason = "Error while closing database";
+      throw new ProductOutputException(reason, e);
     }
   }
 }

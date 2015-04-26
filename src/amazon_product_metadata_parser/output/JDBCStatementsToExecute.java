@@ -36,11 +36,11 @@ abstract public class JDBCStatementsToExecute {
     }
   }
 
-  public abstract void executeBeforeStatements() throws SQLException;
+  public abstract void executeBeforeStatements();
 
-  public abstract void executeProductStatements(ProductDTO productDTO) throws SQLException;
+  public abstract void executeProductStatements(ProductDTO productDTO);
 
-  public abstract void executeAfterStatements() throws SQLException;
+  public abstract void executeAfterStatements();
 
   public void incrementNumStatementsExecuted() {
     incrementNumStatementsExecuted(1);
