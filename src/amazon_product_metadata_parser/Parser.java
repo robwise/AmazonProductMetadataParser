@@ -73,6 +73,7 @@ public class Parser {
         outputProductDTO(productDTO);
       }
 
+
     } catch (FailedValidationException e) {
       System.out.println("Bad product data. Data reads: ");
       for (int i = 0; i < productLines.length; i++) {
@@ -88,7 +89,8 @@ public class Parser {
       output.close();
     }
 
-    System.out.println("Parse complete: " + productsParsedCount + " Products Created...");
+    System.out
+        .println("Parse completed successfully: " + productsParsedCount + " Products Created...");
   }
 
   private void initializeFields(int lineLimit, BufferedReader reader) {
