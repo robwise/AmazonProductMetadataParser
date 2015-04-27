@@ -26,7 +26,7 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
   public SQLServerOperationsImplExample() {
     // Define the schema-dependent statements.
     // Before: these are called once at the beginning
-    unpreparedBeforeStatements.put("prepare load tables ", "{call Prepare_Load_Tables}");
+    unpreparedBeforeStatements.put("prepare load tables", "{call Prepare_Load_Tables}");
 
     // Insert: these are called (sometimes multiple times) every time executeQueries() is called
     unpreparedProductStatements.put("insert product",
@@ -45,12 +45,9 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
   @Override
   public void executeBeforeStatements() {
     initializeCallableStatements();
-    CallableStatement mergeTables = callableBeforeStatements.get("prepare merge tables");
-    try {
-      executeCallableStatement(mergeTables);
-    } catch (SQLException e) {
-      throw new ProductOutputException("Encountered error while executing before statements", e);
-    }
+
+    CallableStatement prepareLoadTables = callableBeforeStatements.get("prepare load tables");
+    executeCallableStatement(prepareLoadTables);
   }
 
   @Override
@@ -128,11 +125,8 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
 
   @Override
   public void executeAfterStatements() {
-    try {
-      callableAfterStatements.get("merge load tables").execute();
-    } catch (SQLException e) {
-      throw new ProductOutputException("Encountered error while executing after statements", e);
-    }
+    CallableStatement mergeLoadTables = callableAfterStatements.get("merge load tables");
+    executeCallableStatement(mergeLoadTables);
     closeAllStatements();
   }
 
@@ -177,18 +171,24 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
     });
   }
 
-  private void executeCallableStatement(CallableStatement statement) throws SQLException {
-    statement.execute();
-    int updateCount = statement.getUpdateCount();
-    incrementNumRowsAffected(updateCount);
-    incrementNumStatementsExecuted();
+  private void executeCallableStatement(CallableStatement statement) {
+    try {
+      statement.execute();
+      int updateCount = statement.getUpdateCount();
+      incrementNumRowsAffected(updateCount);
+      incrementNumStatementsExecuted();
+    } catch (SQLException e) {
+      String reason = "Encountered error while executing callable statement '" + statement + "'";
+      throw new ProductOutputException(reason, e);
+    }
   }
 
   private void prepareAndAddToPreparedStatements(String unpreparedStatementKey,
                                                  String unpreparedStatement,
                                                  Map<String, CallableStatement>
                                                      callableStatements) {
-    try (CallableStatement callableStatement = getConn().prepareCall(unpreparedStatement)) {
+    try {
+      CallableStatement callableStatement = getConn().prepareCall(unpreparedStatement);
       callableStatements.put(unpreparedStatementKey, callableStatement);
     } catch (SQLException e) {
       String reason = "There was an error while preparing callable SQL statement '"

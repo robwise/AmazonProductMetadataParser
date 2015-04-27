@@ -80,7 +80,7 @@ public class SQLServer2012Output implements Output {
                           rowsAffected);
       }
     } catch (SQLException e) {
-      String reason = "Error while closing database";
+      String reason = "Encounted error while closing database";
       throw new ProductOutputException(reason, e);
     }
   }
