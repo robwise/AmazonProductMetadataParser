@@ -16,9 +16,13 @@ import amazon_product_metadata_parser.output.SQLServer2012.SQLServerOperations;
 @SuppressWarnings({"resource", "CodeBlock2Expr"})
 public class SQLServerOperationsImplExample extends SQLServerOperations {
 
+  // Unprepared statements are just the raw strings JDBC will convert to CallableStatements
   private final Map<String, String>            unpreparedBeforeStatements  = new HashMap<>();
   private final Map<String, String>            unpreparedProductStatements = new HashMap<>();
   private final Map<String, String>            unpreparedAfterStatements   = new HashMap<>();
+
+  // These are the unprepared statements after they have been prepared into CallableStatementss by
+  // JDBC
   private final Map<String, CallableStatement> callableBeforeStatements    = new HashMap<>();
   private final Map<String, CallableStatement> callableProductStatements   = new HashMap<>();
   private final Map<String, CallableStatement> callableAfterStatements     = new HashMap<>();
@@ -52,6 +56,12 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
 
   @Override
   public void executeProductStatements(ProductDTO productDTO) {
+    executeInsertProduct(productDTO);
+    executeInsertCategory(productDTO);
+    executeInsertCustomerAndInsertReview(productDTO);
+  }
+
+  private void executeInsertProduct(ProductDTO productDTO) {
     CallableStatement insertProduct = callableProductStatements.get("insert product");
     try {
       insertProduct.clearParameters();
@@ -87,7 +97,9 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
       throw new ProductOutputException("Encountered error while executing insert product "
                                        + "statement", e);
     }
+  }
 
+  private void executeInsertCategory(ProductDTO productDTO) {
     if (null != productDTO.categories) {
       for (int i = 0; i < productDTO.categories.count; i++) {
         CategoryDTO category = productDTO.categories.categories[i];
@@ -111,7 +123,9 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
         }
       }
     }
+  }
 
+  private void executeInsertCustomerAndInsertReview(ProductDTO productDTO) {
     if (null != productDTO.reviews) {
       CallableStatement insertCustomer = callableProductStatements.get("insert customer");
       CallableStatement insertReview = callableProductStatements.get("insert review");
@@ -177,17 +191,17 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
 
   private void initializeCallableStatements() {
     unpreparedBeforeStatements.forEach((unpreparedStatementKey, unpreparedBeforeStatement) -> {
-      prepareAndAddToPreparedStatements(unpreparedStatementKey,
+      prepareAndAddToCallableStatements(unpreparedStatementKey,
                                         unpreparedBeforeStatement,
                                         callableBeforeStatements);
     });
     unpreparedProductStatements.forEach((unpreparedStatementKey, unpreparedProductStatement) -> {
-      prepareAndAddToPreparedStatements(unpreparedStatementKey,
+      prepareAndAddToCallableStatements(unpreparedStatementKey,
                                         unpreparedProductStatement,
                                         callableProductStatements);
     });
     unpreparedAfterStatements.forEach((unpreparedStatementKey, unpreparedAfterStatement) -> {
-      prepareAndAddToPreparedStatements(unpreparedStatementKey,
+      prepareAndAddToCallableStatements(unpreparedStatementKey,
                                         unpreparedAfterStatement,
                                         callableAfterStatements);
     });
@@ -203,7 +217,7 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
     }
   }
 
-  private void prepareAndAddToPreparedStatements(String unpreparedStatementKey,
+  private void prepareAndAddToCallableStatements(String unpreparedStatementKey,
                                                  String unpreparedStatement,
                                                  Map<String, CallableStatement>
                                                      callableStatements) {
