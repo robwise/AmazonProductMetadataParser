@@ -8,12 +8,10 @@ import amazon_product_metadata_parser.dto.ProductDTO;
 abstract public class SQLServerOperations {
 
   private Connection conn;
-  private int        numRowsAffected;
   private int        numStatementsExecuted;
 
   public SQLServerOperations() {
     this.numStatementsExecuted = 0;
-    this.numRowsAffected = 0;
   }
 
   public Connection getConn() {
@@ -48,18 +46,6 @@ abstract public class SQLServerOperations {
 
   public void incrementNumStatementsExecuted(int increment) {
     numStatementsExecuted += increment;
-  }
-
-  public void incrementNumRowsAffected() {
-    incrementNumRowsAffected(1);
-  }
-
-  public void incrementNumRowsAffected(int increment) {
-    numRowsAffected += increment;
-  }
-
-  public int getNumRowsAffected() {
-    return numRowsAffected;
   }
 
   public int getNumStatementsExecuted() {

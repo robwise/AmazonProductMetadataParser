@@ -58,67 +58,89 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
       insertProduct.setString(1, productDTO.asin);
       insertProduct.setString(2, productDTO.title);
       insertProduct.setString(3, productDTO.group);
-      insertProduct.setInt(4, productDTO.salesrank);
-      insertProduct.setInt(5, productDTO.similarItems.count);
-      insertProduct.setInt(6, productDTO.categories.count);
-      insertProduct.setInt(7, productDTO.reviews.total);
-      insertProduct.setInt(8, productDTO.reviews.downloaded);
-      insertProduct.setDouble(9, productDTO.reviews.avgRating);
+      if (-1 == productDTO.salesrank) {
+        insertProduct.setObject(4, null);
+      } else {
+        insertProduct.setInt(4, productDTO.salesrank);
+      }
+      if (null != productDTO.similarItems) {
+        insertProduct.setInt(5, productDTO.similarItems.count);
+      } else {
+        insertProduct.setObject(5, null);
+      }
+      if (null != productDTO.categories) {
+        insertProduct.setInt(6, productDTO.categories.count);
+      } else {
+        insertProduct.setObject(6, null);
+      }
+      if (null != productDTO.reviews) {
+        insertProduct.setInt(7, productDTO.reviews.total);
+        insertProduct.setInt(8, productDTO.reviews.downloaded);
+        insertProduct.setDouble(9, productDTO.reviews.avgRating);
+      } else {
+        insertProduct.setObject(7, null);
+        insertProduct.setObject(8, null);
+        insertProduct.setObject(9, null);
+      }
       executeCallableStatement(insertProduct);
     } catch (SQLException e) {
       throw new ProductOutputException("Encountered error while executing insert product "
                                        + "statement", e);
     }
 
-    for (int i = 0; i < productDTO.categories.count; i++) {
-      CategoryDTO category = productDTO.categories.categories[i];
-      for (int j = 0; j < category.categoryItemCount; j++) {
-        CategoryItemDTO categoryItem = category.categoryItems[j];
-        CallableStatement insertCategory = callableProductStatements.get("insert category");
-        try {
-          insertCategory.clearParameters();
-          insertCategory.setString(1, productDTO.asin);
-          insertCategory.setString(2, categoryItem.id);
-          insertCategory.setString(3, categoryItem.name);
-          insertCategory.setString(4, categoryItem.parentCategoryItem);
-          insertCategory.setBoolean(5, categoryItem.highestParentFlag);
-          insertCategory.setBoolean(6, categoryItem.lowestChildFlag);
-          insertCategory.setInt(7, categoryItem.depthFromParent);
-          executeCallableStatement(insertCategory);
-        } catch (SQLException e) {
-          throw new ProductOutputException("Encountered error while executing insert category "
-                                           + "statement", e);
+    if (null != productDTO.categories) {
+      for (int i = 0; i < productDTO.categories.count; i++) {
+        CategoryDTO category = productDTO.categories.categories[i];
+        for (int j = 0; j < category.categoryItemCount; j++) {
+          CategoryItemDTO categoryItem = category.categoryItems[j];
+          CallableStatement insertCategory = callableProductStatements.get("insert category");
+          try {
+            insertCategory.clearParameters();
+            insertCategory.setString(1, productDTO.asin);
+            insertCategory.setString(2, categoryItem.id);
+            insertCategory.setString(3, categoryItem.name);
+            insertCategory.setString(4, categoryItem.parentCategoryItem);
+            insertCategory.setBoolean(5, categoryItem.highestParentFlag);
+            insertCategory.setBoolean(6, categoryItem.lowestChildFlag);
+            insertCategory.setInt(7, categoryItem.depthFromParent);
+            executeCallableStatement(insertCategory);
+          } catch (SQLException e) {
+            throw new ProductOutputException("Encountered error while executing insert category "
+                                             + "statement", e);
+          }
         }
       }
     }
 
-    CallableStatement insertCustomer = callableProductStatements.get("insert customer");
-    CallableStatement insertReview = callableProductStatements.get("insert review");
-    for (int i = 0; i < productDTO.reviews.reviews.length; i++) {
-      ReviewDTO reviewDTO = productDTO.reviews.reviews[i];
+    if (null != productDTO.reviews) {
+      CallableStatement insertCustomer = callableProductStatements.get("insert customer");
+      CallableStatement insertReview = callableProductStatements.get("insert review");
+      for (int i = 0; i < productDTO.reviews.reviews.length; i++) {
+        ReviewDTO reviewDTO = productDTO.reviews.reviews[i];
 
-      try {
-        insertCustomer.clearParameters();
+        try {
+          insertCustomer.clearParameters();
 
-        insertCustomer.setString(1, reviewDTO.customer);
-        executeCallableStatement(insertCustomer);
-      } catch (SQLException e) {
-        throw new ProductOutputException("Encountered error while executing insert customer "
-                                         + "statement", e);
-      }
+          insertCustomer.setString(1, reviewDTO.customer);
+          executeCallableStatement(insertCustomer);
+        } catch (SQLException e) {
+          throw new ProductOutputException("Encountered error while executing insert customer "
+                                           + "statement", e);
+        }
 
-      try {
-        insertReview.clearParameters();
-        insertReview.setDate(1, Date.valueOf(reviewDTO.date));
-        insertReview.setString(2, productDTO.asin);
-        insertReview.setString(3, reviewDTO.customer);
-        insertReview.setInt(4, reviewDTO.rating);
-        insertReview.setInt(5, reviewDTO.votes);
-        insertReview.setInt(6, reviewDTO.helpful);
-        executeCallableStatement(insertReview);
-      } catch (SQLException e) {
-        throw new ProductOutputException("Encountered error while executing insert review "
-                                         + "statement", e);
+        try {
+          insertReview.clearParameters();
+          insertReview.setDate(1, Date.valueOf(reviewDTO.date));
+          insertReview.setString(2, productDTO.asin);
+          insertReview.setString(3, reviewDTO.customer);
+          insertReview.setInt(4, reviewDTO.rating);
+          insertReview.setInt(5, reviewDTO.votes);
+          insertReview.setInt(6, reviewDTO.helpful);
+          executeCallableStatement(insertReview);
+        } catch (SQLException e) {
+          throw new ProductOutputException("Encountered error while executing insert review "
+                                           + "statement", e);
+        }
       }
     }
   }
@@ -174,8 +196,6 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
   private void executeCallableStatement(CallableStatement statement) {
     try {
       statement.execute();
-      int updateCount = statement.getUpdateCount();
-      incrementNumRowsAffected(updateCount);
       incrementNumStatementsExecuted();
     } catch (SQLException e) {
       String reason = "Encountered error while executing callable statement '" + statement + "'";

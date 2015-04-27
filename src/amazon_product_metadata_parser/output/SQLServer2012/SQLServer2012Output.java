@@ -22,8 +22,6 @@ public class SQLServer2012Output implements Output {
   private final String     databaseName;
   private final SQLServerOperations statementsToExecute;
   private       Connection conn;
-  private int insertStatementsExecuted = 0;
-  private int rowsAffected = 0;
 
   public SQLServer2012Output(String databaseName, SQLServerOperations statementsToExecute) {
     this.databaseName = databaseName;
@@ -49,7 +47,6 @@ public class SQLServer2012Output implements Output {
       System.out.println("Connected to SQL Server Database '" + databaseName + "'");
       statementsToExecute.setConn(conn);
       statementsToExecute.executeBeforeStatements();
-      updateCounts();
     } catch (ClassNotFoundException | SQLException e) {
       throw new ProductOutputException(e);
     }
@@ -58,26 +55,17 @@ public class SQLServer2012Output implements Output {
   @Override
   public void execute(ProductDTO productDTO) {
     statementsToExecute.executeProductStatements(productDTO);
-    updateCounts();
-  }
-
-  private void updateCounts() {
-    rowsAffected = statementsToExecute.getNumRowsAffected();
-    insertStatementsExecuted = statementsToExecute.getNumStatementsExecuted();
   }
 
   @Override
   public void close() {
     statementsToExecute.executeAfterStatements();
-    updateCounts();
+    int insertStatementsExecuted = statementsToExecute.getNumStatementsExecuted();
     try {
       if (conn != null) {
         conn.close();
         System.out.println("Closed connection to '" + databaseName + "'");
-        System.out.printf("Number of statements executed: %d%n"
-                          + "Number of rows in affected: %d%n",
-                          insertStatementsExecuted,
-                          rowsAffected);
+        System.out.printf("Number of statements executed: %d%n", insertStatementsExecuted);
       }
     } catch (SQLException e) {
       String reason = "Encounted error while closing database";
