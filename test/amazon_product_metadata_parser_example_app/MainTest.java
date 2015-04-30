@@ -9,7 +9,10 @@ public class MainTest {
 
   @Test
   public void runTest() throws Exception {
-    InputStream in = new ByteArrayInputStream("test resources/test-data.txt".getBytes());
+    String location = "test resources/test-data.txt";
+    String databaseName = "AmazonProductMetadata";
+    String fakeUserInput = String.format("%s%n%s", databaseName, location);
+    InputStream in = new ByteArrayInputStream((fakeUserInput).getBytes());
     Main.run(in);
   }
 
