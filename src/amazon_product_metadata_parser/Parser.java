@@ -14,7 +14,6 @@ import java.util.List;
 import amazon_product_metadata_parser.dto.FailedValidationException;
 import amazon_product_metadata_parser.dto.ProductDTO;
 import amazon_product_metadata_parser.dto.ProductDTOFactory;
-import amazon_product_metadata_parser.output.ConsoleOutput;
 import amazon_product_metadata_parser.output.Output;
 import amazon_product_metadata_parser.output.ProductOutputException;
 
@@ -42,11 +41,6 @@ public class Parser {
     this.amazonData = Paths.get(pathString);
     this.output = output;
     fProduct = new ProductDTOFactory();
-  }
-
-  public static void main(String... args) throws IOException {
-    Parser parser = new Parser("resources/amazon-meta.txt", new ConsoleOutput());
-    parser.parse();
   }
 
   public void parse() throws IOException {

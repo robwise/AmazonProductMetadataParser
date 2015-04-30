@@ -18,7 +18,7 @@ public class ParserTest {
                       + "# Full information about Amazon Share the Love "
                       + "products" + LINE_SEPARATOR
                       + "Total items: 548552" + LINE_SEPARATOR;
-    Parser parser = new Parser("resources/amazon-meta.txt", null);
+    Parser parser = new Parser("test resources/test-data.txt", null);
     String lines = parser.getFirstLines(3);
     assertEquals(expected, lines);
   }
