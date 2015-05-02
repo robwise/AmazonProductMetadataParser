@@ -19,17 +19,22 @@ public class SQLServer2012Output implements Output {
   private static final String PC_NAME_WINDOWS_ENVIRONMENT_VARIABLE = "COMPUTERNAME";
   private final String serverUrl;
   private final String pcName = System.getenv(PC_NAME_WINDOWS_ENVIRONMENT_VARIABLE);
-  private final String     databaseName;
-  private final SQLServerOperations statementsToExecute;
-  private       Connection conn;
+  private final String              databaseName;
+  private final SQLServerOperations sqlServerOperations;
+  private       Connection          conn;
 
-  public SQLServer2012Output(String databaseName, SQLServerOperations statementsToExecute) {
+  public SQLServer2012Output(String databaseName, SQLServerOperations sqlServerOperations) {
     this.databaseName = databaseName;
-    this.statementsToExecute = statementsToExecute;
+    this.sqlServerOperations = sqlServerOperations;
     serverUrl = buildServerURL();
   }
 
-  //  url = "jdbc:sqlserver://MYPC\\SQLEXPRESS;databaseName=MYDB;integratedSecurity=true";
+  /**
+   * JDBC connects to the SQL Server in-memory via a URL based on the pc, instance, and database
+   * names. SQLEXPRESS is the default instance name for SQL Server Express Edition, and MSSQLSERVER
+   * is the default instance name for all the other versions. Example url {@code
+   * jdbc:sqlserver://MYPC\\SQLEXPRESS;databaseName=MYDB; integratedSecurity=true};
+   */
   private String buildServerURL() {
     return "jdbc:sqlserver://"
            + pcName
@@ -41,35 +46,47 @@ public class SQLServer2012Output implements Output {
   @Override
   public void open() {
     try {
-      Class.forName(SQL_SERVER_DRIVER_CLASS_NAME);
-      //noinspection CallToDriverManagerGetConnection
-      conn = DriverManager.getConnection(serverUrl);
-      System.out.println("Connected to SQL Server Database '" + databaseName + "'");
-      statementsToExecute.setConn(conn);
-      statementsToExecute.executeBeforeStatements();
+      connectSQLServerOperationsToDatabase();
     } catch (ClassNotFoundException | SQLException e) {
-      throw new ProductOutputException(e);
+      throw new ProductOutputException("Encountered error opening connection to database", e);
     }
+    sqlServerOperations.executeBeforeStatements();
+  }
+
+  private void connectSQLServerOperationsToDatabase() throws ClassNotFoundException, SQLException {
+    // Initialize the SQL Server driver class
+    Class.forName(SQL_SERVER_DRIVER_CLASS_NAME);
+
+    //noinspection CallToDriverManagerGetConnection
+    conn = DriverManager.getConnection(serverUrl);
+
+    // Pass opened connection to the operations object for it to use
+    sqlServerOperations.setConn(conn);
+    System.out.println("Connected to SQL Server Database '" + databaseName + "'");
   }
 
   @Override
   public void execute(ProductDTO productDTO) {
-    statementsToExecute.executeProductStatements(productDTO);
+    sqlServerOperations.executeProductStatements(productDTO);
   }
 
   @Override
   public void close() {
-    statementsToExecute.executeAfterStatements();
-    int insertStatementsExecuted = statementsToExecute.getNumStatementsExecuted();
+    sqlServerOperations.executeAfterStatements();
     try {
-      if (conn != null) {
-        conn.close();
-        System.out.println("Closed connection to '" + databaseName + "'");
-        System.out.printf("Number of statements executed: %d%n", insertStatementsExecuted);
-      }
+      closeConnection();
     } catch (SQLException e) {
       String reason = "Encounted error while closing database";
       throw new ProductOutputException(reason, e);
+    }
+  }
+
+  private void closeConnection() throws SQLException {
+    if (conn != null) {
+      int insertStatementsExecuted = sqlServerOperations.getNumStatementsExecuted();
+      conn.close();
+      System.out.println("Closed connection to '" + databaseName + "'");
+      System.out.printf("Number of statements executed: %d%n", insertStatementsExecuted);
     }
   }
 }
