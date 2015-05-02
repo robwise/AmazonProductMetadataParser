@@ -161,8 +161,8 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
 
   @Override
   public void executeAfterStatements() {
-    CallableStatement mergeLoadTables = callableAfterStatements.get("merge load tables");
-    executeCallableStatement(mergeLoadTables);
+//    CallableStatement mergeLoadTables = callableAfterStatements.get("merge load tables");
+//    executeCallableStatement(mergeLoadTables);
     closeAllStatements();
   }
 
