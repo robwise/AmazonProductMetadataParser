@@ -125,7 +125,7 @@ public class Parser {
   private void outputProductDTO(ProductDTO productDTO) {
     output.execute(productDTO);
     productsParsedCount++;
-    if ((productsParsedCount % 1000) == 0) {
+    if ((productsParsedCount % 10000) == 0) {
       System.out.println("***Status: " + productsParsedCount + " Products Created...");
     }
   }
