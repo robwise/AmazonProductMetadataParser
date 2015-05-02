@@ -47,8 +47,11 @@ public class Main {
         getUserInput(
             "Please enter the location of the 'amazon-meta.txt' file or type 'quit' to exit.",
             "Enter Path: ");
+    int lines = Integer.valueOf(
+        getUserInput("Please enter the number of lines of data you wish to parse. If you "
+                     + "wish to parse all of the data, please enter '-1'", "Lines: "));
     Parser parser = new Parser(location, output);
-    parser.parse();
+    parser.parse(lines);
   }
 
   private static String getUserInput(String message, String prompt) {

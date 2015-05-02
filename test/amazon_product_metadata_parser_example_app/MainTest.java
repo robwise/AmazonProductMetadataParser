@@ -11,7 +11,8 @@ public class MainTest {
   public void runTest() throws Exception {
     String location = "test resources/test-data.txt";
     String databaseName = "AmazonProductMetadata";
-    String fakeUserInput = String.format("%s%n%s", databaseName, location);
+    String numberOfLines = "-1";
+    String fakeUserInput = String.format("%s%n%s%n%s", databaseName, location, numberOfLines);
     InputStream in = new ByteArrayInputStream((fakeUserInput).getBytes());
     Main.run(in);
   }
