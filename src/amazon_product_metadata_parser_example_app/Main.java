@@ -2,6 +2,8 @@ package amazon_product_metadata_parser_example_app;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 import amazon_product_metadata_parser.Parser;
@@ -42,16 +44,25 @@ public class Main {
     SQLServer2012Output
         output =
         new SQLServer2012Output(databaseName, new SQLServerOperationsImplExample());
-    String
-        location =
-        getUserInput(
-            "Please enter the location of the 'amazon-meta.txt' file or type 'quit' to exit.",
-            "Enter Path: ");
+    String location = getLocationOfData();
     int lines = Integer.valueOf(
-        getUserInput("Please enter the number of lines of data you wish to parse. If you "
-                     + "wish to parse all of the data, please enter '-1'", "Lines: "));
+        getUserInput("Please enter the number of products you wish to parse. If you "
+                     + "wish to parse all of the data, please enter '-1'", "Products: "));
     Parser parser = new Parser(location, output);
     parser.parse(lines);
+  }
+
+  private static String getLocationOfData() {
+    String location;
+    if (Files.exists(Paths.get("amazon-meta.txt"))) {
+      location = "amazon-meta.txt";
+    } else {
+      location =
+          getUserInput(
+              "Please enter the location of the 'amazon-meta.txt' file or type 'quit' to exit.",
+              "Enter Path: ");
+    }
+    return location;
   }
 
   private static String getUserInput(String message, String prompt) {

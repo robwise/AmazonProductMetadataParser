@@ -31,7 +31,7 @@ public class Parser {
   private final Path   amazonData;
   private final Output output;
   private final ProductDTOFactory fProduct;
-  private       int               lineLimit;
+  private int productLimit;
   private       int               currLineNumber;
   private       int               productsParsedCount;
   private       String            currLine;
@@ -47,11 +47,11 @@ public class Parser {
     parse(-1);
   }
 
-  public void parse(int lineLimit) throws IOException {
+  public void parse(int productLimit) throws IOException {
     String[] productLines = null;
     try (BufferedReader reader = Files.newBufferedReader(amazonData, ENCODING)) {
 
-      initializeFields(lineLimit, reader);
+      initializeFields(productLimit, reader);
 
       System.out.println("Beginning Parse...");
       System.out.println();
@@ -88,7 +88,7 @@ public class Parser {
   }
 
   private void initializeFields(int lineLimit, BufferedReader reader) {
-    this.lineLimit = lineLimit;
+    this.productLimit = lineLimit;
     this.reader = reader;
     currLineNumber = 0;
     productsParsedCount = 0;
@@ -103,7 +103,7 @@ public class Parser {
   }
 
   private boolean readerAtEndOfData() {
-    return (null == currLine) || (currLineNumber == lineLimit);
+    return (null == currLine) || (productsParsedCount == productLimit);
   }
 
   private String[] readLinesUntilPastEndOfAProduct() throws IOException {

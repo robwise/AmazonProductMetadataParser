@@ -135,4 +135,17 @@ public class ParserTest {
     String actualParsedData = output.result;
     assertEquals(expectedParsedData, actualParsedData);
   }
+
+  @Test
+  public void testParseDataIntoStringOutputWithProductLimit() throws IOException {
+    String expectedParsedData = String.format("ID: 0%n"
+                                              + "ASIN: 0771044445%n"
+                                              + "Discontinued Product%n"
+                                              + "%n");
+    StringOutput output = new StringOutput();
+    Parser parser = new Parser("test resources/test-data.txt", output);
+    parser.parse(1);
+    String actualParsedData = output.result;
+    assertEquals(expectedParsedData, actualParsedData);
+  }
 }
