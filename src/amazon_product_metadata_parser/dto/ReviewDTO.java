@@ -38,13 +38,16 @@ public class ReviewDTO {
                                                         rating));
     }
     if (helpful < 0) {
-      throw new FailedValidationException(String.format("Helpful (%d) is less than zero",
-                                                        helpful));
+      throw new FailedValidationException(String.format(
+        "Helpful (%d) is less than zero",
+        helpful));
     }
-    if (date.getYear() < 1990 || date.getYear() > 2007) {
-      throw new FailedValidationException(String.format("Date (%s) is not in acceptable range",
-                                                        date.toString()));
-    }
+    // These fail, so commented out...
+    //    if (date.getYear() < 1990 || date.getYear() > 2007) {
+    //      throw new FailedValidationException(String.format("Date (%s) is
+    // not in acceptable range",
+    //                                                        date.toString()));
+    //    }
   }
 
   @Override

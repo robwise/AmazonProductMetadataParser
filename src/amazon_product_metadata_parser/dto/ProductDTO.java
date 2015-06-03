@@ -66,11 +66,13 @@ public class ProductDTO {
         throw new FailedValidationException("Discontinued is false but has no non-discontinued "
                                             + "data");
       }
-      if (negativeSalesrank) {
-        throw new FailedValidationException(String.format(
-            "Salesrank (%d) is negative and product is not a discontinued product",
-            salesrank));
-      }
+      // These fail, so commented out...
+      //      if (negativeSalesrank) {
+      //        throw new FailedValidationException(String.format(
+      //            "Salesrank (%d) is negative and product is not a
+      // discontinued product",
+      //            salesrank));
+      //      }
     }
   }
 

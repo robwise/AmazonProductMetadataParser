@@ -15,13 +15,13 @@ public class StringOutput implements Output {
   public String result = "";
 
   @Override
-  public void open() throws IOException {
+  public void open() {
     // Nothing to do
   }
 
   @Override
-  public void execute(ProductDTO productDTO) throws IOException {
-    result += productDTO.toString() + String.format("%n");
+  public void execute(ProductDTO productDTO) {
+    result += productDTO + String.format("%n");
   }
 
   @Override

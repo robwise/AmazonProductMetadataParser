@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: sqljdbc41.jar sqljdbc_auth.dll
+Main-Class: amazon_product_metadata_parser_example_app.Main
+
