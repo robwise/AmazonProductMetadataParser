@@ -1,15 +1,15 @@
 package amazon_product_metadata_parser.output.SQLServer2012;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import amazon_product_metadata_parser.dto.ProductDTO;
 import amazon_product_metadata_parser.output.Output;
 import amazon_product_metadata_parser.output.ProductOutputException;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 /**
- * Outputs product data to the SQL Server 2012 database "AmazonData" using Windows authentication.
+ * Outputs product data to a SQL Server 2012 database using Windows authentication.
  */
 @SuppressWarnings("SpellCheckingInspection")
 public class SQLServer2012Output implements Output {
@@ -30,10 +30,9 @@ public class SQLServer2012Output implements Output {
   }
 
   /**
-   * JDBC connects to the SQL Server in-memory via a URL based on the pc, instance, and database
-   * names. SQLEXPRESS is the default instance name for SQL Server Express Edition, and MSSQLSERVER
-   * is the default instance name for all the other versions. Example url {@code
-   * jdbc:sqlserver://MYPC\\SQLEXPRESS;databaseName=MYDB; integratedSecurity=true};
+   * JDBC connects to the SQL Server in-memory via a URL based on the pc and database
+   * names. Example url: {@code
+   * jdbc:sqlserver://ROB-PC\\MSSQLSERVER;databaseName=AmazonProductMetadata; integratedSecurity=true};
    */
   private String buildServerURL() {
     return "jdbc:sqlserver://"

@@ -1,17 +1,17 @@
 package amazon_product_metadata_parser_example_app;
 
-import java.sql.CallableStatement;
-import java.sql.Date;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
 import amazon_product_metadata_parser.dto.CategoryDTO;
 import amazon_product_metadata_parser.dto.CategoryItemDTO;
 import amazon_product_metadata_parser.dto.ProductDTO;
 import amazon_product_metadata_parser.dto.ReviewDTO;
 import amazon_product_metadata_parser.output.ProductOutputException;
 import amazon_product_metadata_parser.output.SQLServer2012.SQLServerOperations;
+
+import java.sql.CallableStatement;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings({"resource", "CodeBlock2Expr"})
 public class SQLServerOperationsImplExample extends SQLServerOperations {
@@ -35,6 +35,8 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
     // Insert: these are called (sometimes multiple times) every time executeQueries() is called
     unpreparedProductStatements.put("insert product",
                                     "{call Insert_Product (?,?,?,?,?,?,?,?,?)}");
+    unpreparedProductStatements.put("insert copurchased product",
+                                    "{call Insert_Copurchased_Product (?,?)}");
     unpreparedProductStatements.put("insert category",
                                     "{call Insert_Category (?,?,?,?,?,?,?)}");
     unpreparedProductStatements.put("insert customer",
@@ -57,8 +59,29 @@ public class SQLServerOperationsImplExample extends SQLServerOperations {
   @Override
   public void executeProductStatements(ProductDTO productDTO) {
     executeInsertProduct(productDTO);
+    executeInsertCopurchasedProduct(productDTO);
     executeInsertCategory(productDTO);
     executeInsertCustomerAndInsertReview(productDTO);
+  }
+
+  private void executeInsertCopurchasedProduct(ProductDTO productDTO) {
+    if (null != productDTO.similarItems) {
+      CallableStatement
+          insertCopurchasedProduct =
+          callableProductStatements.get("insert copurchased product");
+      try {
+        for (String similarItemASIN : productDTO.similarItems.similarItemASINs) {
+          insertCopurchasedProduct.clearParameters();
+          insertCopurchasedProduct.setString(1, productDTO.asin);
+          insertCopurchasedProduct.setString(2, similarItemASIN);
+          executeCallableStatement(insertCopurchasedProduct);
+        }
+      } catch (SQLException e) {
+        throw new ProductOutputException(
+            "Encountered error while executing insert copurchased product "
+            + "statement", e);
+      }
+    }
   }
 
   private void executeInsertProduct(ProductDTO productDTO) {

@@ -1,5 +1,11 @@
 package amazon_product_metadata_parser;
 
+import amazon_product_metadata_parser.dto.FailedValidationException;
+import amazon_product_metadata_parser.dto.ProductDTO;
+import amazon_product_metadata_parser.dto.ProductDTOFactory;
+import amazon_product_metadata_parser.output.Output;
+import amazon_product_metadata_parser.output.ProductOutputException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -10,12 +16,6 @@ import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
-
-import amazon_product_metadata_parser.dto.FailedValidationException;
-import amazon_product_metadata_parser.dto.ProductDTO;
-import amazon_product_metadata_parser.dto.ProductDTOFactory;
-import amazon_product_metadata_parser.output.Output;
-import amazon_product_metadata_parser.output.ProductOutputException;
 
 /**
  * Parses Amazon product metadata text file into Java objects.
@@ -65,6 +65,7 @@ public class Parser {
         productLines = readLinesUntilPastEndOfAProduct();
         ProductDTO productDTO = fProduct.build(productLines);
         outputProductDTO(productDTO);
+        moveReaderToStartOfNextProduct();
       }
 
 
@@ -100,6 +101,7 @@ public class Parser {
     while (currLineNumber < (DATA_START_LINE - 1)) {
       readNextLine();
     }
+    moveReaderToStartOfNextProduct();
   }
 
   private boolean readerAtEndOfData() {
@@ -107,7 +109,6 @@ public class Parser {
   }
 
   private String[] readLinesUntilPastEndOfAProduct() throws IOException {
-    moveReaderToStartOfNextProduct();
     List<String> productLines = new ArrayList<>();
     while (!readerAtEndOfProduct()) {
       productLines.add(currLine);
